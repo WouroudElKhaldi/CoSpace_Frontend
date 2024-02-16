@@ -6,6 +6,13 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --color-blue: #4d6188;
+  --color-blue-back: #4d6188b0;
+  --color-blue-hover: #6f84ae;
+  --color-brown: #b4602d;
+  --color-beige: #d28d48;
+  --color-offWhite: #ededf5;
+  --color-white: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -18,12 +25,7 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background-color: var(--background-start-rgb);
 }
 
 @layer utilities {
