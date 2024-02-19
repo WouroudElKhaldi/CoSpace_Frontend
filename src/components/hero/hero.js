@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import styles from "./hero.module.css";
 import Typed from "typed.js";
+import Link from "next/link";
 
 export default function HeroComp() {
   let mystrings;
@@ -31,7 +32,9 @@ export default function HeroComp() {
             Coworking spaces designed for you to{" "}
             <span ref={slogan} className={styles.typed}></span>
           </p>
-          <button className={styles.btn}>List You Space</button>
+          <Link href="/spaces" className={styles.btn}>
+            Book your place
+          </Link>
         </div>
       </div>
     </section>

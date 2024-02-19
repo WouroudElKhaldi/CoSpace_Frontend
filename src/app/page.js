@@ -1,12 +1,11 @@
 import HeroComp from "@/components/hero/hero";
-import Navbar from "@/components/navbar/navbar";
-import Image from "next/image";
+import { getTopRatedSpaces } from "@/fetchData/spaces";
 
-export default function Home() {
+export default async function Home() {
+  const data = await getTopRatedSpaces();
   return (
     <main>
-      <Navbar />
-      <HeroComp />
+      <HeroComp data={data} />
     </main>
   );
 }

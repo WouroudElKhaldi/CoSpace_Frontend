@@ -69,9 +69,29 @@ export default function SignUpComp() {
             <TextField
               fullWidth
               id="filled-basic"
+              label="FullName"
+              variant="outlined"
+              name="fullName"
+              sx={{
+                fontFamily: "Arial !important",
+              }}
+            />
+            <TextField
+              fullWidth
+              id="filled-basic"
               label="Email"
               variant="outlined"
               name="email"
+              sx={{
+                fontFamily: "Arial !important",
+              }}
+            />
+            <TextField
+              fullWidth
+              id="filled-basic"
+              label="Phone Number"
+              variant="outlined"
+              name="phoneNumber"
               sx={{
                 fontFamily: "Arial !important",
               }}

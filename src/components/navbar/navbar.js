@@ -7,10 +7,12 @@ import { useContext } from "react";
 import Avatar from "@mui/material/Avatar";
 import Link from "next/link";
 import { AuthContext } from "@/context/authContext";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
   const { user, logout } = useContext(AuthContext);
   const [nav, setNav] = useState(false);
+  const pathname = usePathname();
 
   return (
     // Header Container
@@ -32,7 +34,10 @@ export default function Navbar() {
               transition={{ duration: 0.5 }}
             >
               {nav ? (
-                <span className={styles.closeMenu} onClick={() => setNav(!nav)}>
+                <span
+                  className={`${styles.closeMenu}`}
+                  onClick={() => setNav(!nav)}
+                >
                   <AiOutlineClose size={25} />
                 </span>
               ) : (
@@ -42,7 +47,11 @@ export default function Navbar() {
                 <Link
                   href="/"
                   activeclassname={styles.activeLink}
-                  className={`${styles.menuItem}`}
+                  className={`${styles.menuItem} ${
+                    ["/", "/login", "/signup", "/spaces"].includes(pathname)
+                      ? styles.white
+                      : styles.black
+                  } ${["/"].includes(pathname) ? styles.activeNavItem : ""}`}
                 >
                   Home
                 </Link>
@@ -51,7 +60,13 @@ export default function Navbar() {
                 <Link
                   href="/spaces"
                   activeclassname={styles.activeLink}
-                  className={`${styles.menuItem} `}
+                  className={`${styles.menuItem} ${
+                    ["/", "/login", "/signup", "/spaces"].includes(pathname)
+                      ? styles.white
+                      : styles.black
+                  } ${
+                    ["/spaces"].includes(pathname) ? styles.activeNavItem : ""
+                  }`}
                 >
                   Spaces
                 </Link>
@@ -60,7 +75,13 @@ export default function Navbar() {
                 <Link
                   href="/events"
                   activeclassname={styles.activeLink}
-                  className={`${styles.menuItem} `}
+                  className={`${styles.menuItem} ${
+                    ["/", "/login", "/signup", "/spaces"].includes(pathname)
+                      ? styles.white
+                      : styles.black
+                  } ${
+                    ["/events"].includes(pathname) ? styles.activeNavItem : ""
+                  }`}
                 >
                   Events
                 </Link>
@@ -71,7 +92,15 @@ export default function Navbar() {
                 <Link
                   href="/contactus"
                   activeclassname={styles.activeLink}
-                  className={`${styles.menuItem} `}
+                  className={`${styles.menuItem} ${
+                    ["/", "/login", "/signup", "/spaces"].includes(pathname)
+                      ? styles.white
+                      : styles.black
+                  } ${
+                    ["/contactus"].includes(pathname)
+                      ? styles.activeNavItem
+                      : ""
+                  } `}
                 >
                   Contact Us
                 </Link>
@@ -82,7 +111,13 @@ export default function Navbar() {
                 <Link
                   href="/aboutus"
                   activeclassname={styles.activeLink}
-                  className={`${styles.menuItem} `}
+                  className={`${styles.menuItem} ${
+                    ["/", "/login", "/signup", "/spaces"].includes(pathname)
+                      ? styles.white
+                      : styles.black
+                  } ${
+                    ["/aboutus"].includes(pathname) ? styles.activeNavItem : ""
+                  }`}
                 >
                   About Us
                 </Link>
@@ -94,7 +129,11 @@ export default function Navbar() {
                     <Link
                       href="/dashboard"
                       activeclassname={styles.activeLink}
-                      className={`${styles.menuItem}`}
+                      className={`${styles.menuItem} ${
+                        ["/", "/login", "/signup", "/spaces"].includes(pathname)
+                          ? styles.white
+                          : styles.black
+                      }`}
                     >
                       Dashboard
                     </Link>
@@ -107,17 +146,28 @@ export default function Navbar() {
               ) : (
                 <>
                   <li>
-                    <button className={styles.button}>Login</button>
+                    <Link className={styles.button} href="/login">
+                      Login
+                    </Link>
                   </li>
                   <li>
-                    <button className={styles.button}>Sign Up</button>
+                    <Link className={styles.button} href="/signup">
+                      Sign Up
+                    </Link>
                   </li>
                 </>
               )}
             </ul>
           </nav>
 
-          <div onClick={() => setNav(!nav)} className={styles.mobile_btn}>
+          <div
+            onClick={() => setNav(!nav)}
+            className={`${styles.mobile_btn} ${
+              ["/", "/login", "/signup", "/spaces"].includes(pathname)
+                ? styles.white
+                : styles.black
+            }`}
+          >
             {!nav ? <AiOutlineMenu size={25} /> : ""}
           </div>
 

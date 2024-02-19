@@ -138,7 +138,13 @@
   text-align: center;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 970px) {
+  .content .title {
+    font-size: 35px;
+  }
+}
+
+@media (max-width: 800px) {
   .main {
     justify-content: center;
   }

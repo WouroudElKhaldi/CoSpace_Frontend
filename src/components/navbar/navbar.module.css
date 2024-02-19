@@ -31,14 +31,17 @@
   background-color: transparent;
 }
 .button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 45px;
   padding: 8px 16px;
   border-radius: 10px;
-  background: var(--color-brown);
+  background: var(--color-blue);
   color: var(--color-offWhite);
   width: 100px;
   font-weight: bold;
-  font-size: 17px;
+  font-size: 18px;
   transition: 0.1s;
   border: none;
   outline: none;
@@ -46,7 +49,7 @@
 }
 
 .button:hover {
-  background-color: var(--color-beige);
+  background-color: var(--color-blue-hover);
 }
 
 .menu {
@@ -68,20 +71,24 @@
 }
 .closeMenu {
   position: absolute;
-  top: 35px;
-  right: 35px;
+  top: 32px;
+  right: 24px;
   cursor: pointer;
-  color: var(--color-brown);
+  color: var(--color-offWhite);
 }
 .white {
-  color: white;
+  color: var(--color-offWhite);
+}
+
+.black {
+  color: black;
 }
 
 .blue {
   color: var(--color-blue);
 }
 
-.menu a:after {
+.menu .menuItem:after {
   content: "";
   display: block;
   width: 0;
@@ -89,8 +96,8 @@
   transition: width 0.3s ease;
 }
 
-.menu a:hover:after,
-.menu a:focus:after {
+.menu .menuItem:hover:after,
+.menu .menuItem:focus:after {
   width: 100%;
   background-color: var(--color-brown);
   /* Change underline color to red when hovered */
@@ -106,60 +113,43 @@
 .mobile_btn_blue {
   display: none;
 }
-.cartIcon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  cursor: pointer;
-}
-
-.cartIconBlue {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: var(--first-blue-color);
-  cursor: pointer;
-}
-
-.count {
-  position: relative;
-}
-.count::after {
-  content: attr(count);
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  color: white;
-  background-color: red;
-  top: -10px;
-  left: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  font-size: 12px;
-  font-family: "Poppins", sans-serif;
-}
 
 .menuItem.activeNavItem:after {
   width: 100%;
-  background-color: var(--color-blue);
+  background-color: var(--color-brown);
   /* Change underline color to red when it's the active page */
 }
 
-.menu .shopIcon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-@media (max-width: 992px) {
+@media (max-width: 1200px) {
   .menu {
     gap: 1rem;
   }
-  .menu a {
-    font-size: 18px;
+  .menuItem {
+    font-size: 1rem;
+  }
+  .button {
+    font-size: 0.9rem;
+    width: 80px;
+    height: 35px;
+    padding: 8px;
+  }
+}
+
+.button {
+  font-size: 1.1rem;
+  width: 100px;
+  height: 45px;
+  padding: 8px 16px;
+}
+@media (max-width: 800px) {
+  .white {
+    color: var(--color-offWhite);
+  }
+  .black {
+    color: black;
+  }
+  .menu {
+    gap: 1rem;
   }
   .whatever {
     gap: 1rem;
@@ -167,7 +157,6 @@
 
   .mobile_btn {
     display: flex;
-    color: white;
     cursor: pointer;
     right: 2.5rem;
     top: 50%;
@@ -189,39 +178,29 @@
     flex-direction: column;
     justify-content: center;
     position: fixed;
-    left: -100%;
+    left: 100%;
     right: 0;
     bottom: 0;
     top: 0;
     width: 100%;
     height: 100vh;
-    background-color: rgba(
-      255,
-      255,
-      255,
-      0.8
-    ); /* White background with 0.8 opacity */
-    backdrop-filter: blur(10px); /* Adjust the blur radius as needed */
+    background-color: var(--color-blue-back);
+    backdrop-filter: blur(10px);
     z-index: 10;
-    transition: left 1s;
-    overflow: hidden; /* Ensures the blur effect doesn't overflow */
+    transition: left 0.8s;
+    overflow: hidden;
+    row-gap: 2rem;
   }
 
-  .menu a {
-    color: black;
+  .menu .menuItem {
+    color: white;
+    font-size: 22px;
   }
   .whatever {
     flex-direction: row-reverse;
     gap: 0;
   }
-  /* Rest of your menu styles here */
 
-  .cartIcon {
-    margin-left: 1rem;
-  }
-  .cartIconBlue {
-    margin-left: 1rem;
-  }
   .active {
     left: 0;
   }

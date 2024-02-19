@@ -13,6 +13,7 @@
   --color-beige: #d28d48;
   --color-offWhite: #ededf5;
   --color-white: #ffffff;
+  --filter-shadow: 0 0 10px 4px rgba(179, 179, 179, 0.5);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -25,7 +26,7 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background-color: var(--background-start-rgb);
+  background-color: var(--color-offWhite);
 }
 
 @layer utilities {
