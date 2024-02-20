@@ -8,19 +8,44 @@ import Avatar from "@mui/material/Avatar";
 import Link from "next/link";
 import { AuthContext } from "@/context/authContext";
 import { usePathname } from "next/navigation";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { IconButton } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
-  const { user, logout } = useContext(AuthContext);
+  const router = useRouter();
+  const { user, LogOut } = useContext(AuthContext);
   const [nav, setNav] = useState(false);
   const pathname = usePathname();
+  const [hasScrolled, setHasScrolled] = useState(false);
+  const [isDarkFont, setIsDarkFont] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setHasScrolled(window.scrollY > 0);
+      setIsDarkFont(window.scrollY > 350);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     // Header Container
-    <header className={`${styles.headerContainer}`}>
+    <header
+      className={`${styles.headerContainer} ${
+        hasScrolled ? styles.scrolled : ""
+      } ${isDarkFont ? styles.darkFont : ""} 
+      ${!nav ? styles.normal : styles.notNormal}
+      `}
+    >
       <div className={styles.navbar}>
         <Link href="/">
           <div>
-            <p>CoWork</p>
+            <p>CoSpace</p>
           </div>
         </Link>
         <div className={styles.whatever}>
@@ -48,10 +73,19 @@ export default function Navbar() {
                   href="/"
                   activeclassname={styles.activeLink}
                   className={`${styles.menuItem} ${
-                    ["/", "/login", "/signup", "/spaces"].includes(pathname)
+                    [
+                      "/",
+                      "/login",
+                      "/signup",
+                      "/spaces",
+                      "/contactus",
+                      "/aboutus",
+                      "/events",
+                    ].includes(pathname)
                       ? styles.white
                       : styles.black
                   } ${["/"].includes(pathname) ? styles.activeNavItem : ""}`}
+                  onClick={() => setNav(false)}
                 >
                   Home
                 </Link>
@@ -61,12 +95,21 @@ export default function Navbar() {
                   href="/spaces"
                   activeclassname={styles.activeLink}
                   className={`${styles.menuItem} ${
-                    ["/", "/login", "/signup", "/spaces"].includes(pathname)
+                    [
+                      "/",
+                      "/login",
+                      "/signup",
+                      "/spaces",
+                      "/contactus",
+                      "/aboutus",
+                      "/events",
+                    ].includes(pathname)
                       ? styles.white
                       : styles.black
                   } ${
                     ["/spaces"].includes(pathname) ? styles.activeNavItem : ""
                   }`}
+                  onClick={() => setNav(false)}
                 >
                   Spaces
                 </Link>
@@ -76,12 +119,21 @@ export default function Navbar() {
                   href="/events"
                   activeclassname={styles.activeLink}
                   className={`${styles.menuItem} ${
-                    ["/", "/login", "/signup", "/spaces"].includes(pathname)
+                    [
+                      "/",
+                      "/login",
+                      "/signup",
+                      "/spaces",
+                      "/contactus",
+                      "/aboutus",
+                      "/events",
+                    ].includes(pathname)
                       ? styles.white
                       : styles.black
                   } ${
                     ["/events"].includes(pathname) ? styles.activeNavItem : ""
                   }`}
+                  onClick={() => setNav(false)}
                 >
                   Events
                 </Link>
@@ -93,7 +145,15 @@ export default function Navbar() {
                   href="/contactus"
                   activeclassname={styles.activeLink}
                   className={`${styles.menuItem} ${
-                    ["/", "/login", "/signup", "/spaces"].includes(pathname)
+                    [
+                      "/",
+                      "/login",
+                      "/signup",
+                      "/spaces",
+                      "/contactus",
+                      "/aboutus",
+                      "/events",
+                    ].includes(pathname)
                       ? styles.white
                       : styles.black
                   } ${
@@ -101,6 +161,7 @@ export default function Navbar() {
                       ? styles.activeNavItem
                       : ""
                   } `}
+                  onClick={() => setNav(false)}
                 >
                   Contact Us
                 </Link>
@@ -112,46 +173,134 @@ export default function Navbar() {
                   href="/aboutus"
                   activeclassname={styles.activeLink}
                   className={`${styles.menuItem} ${
-                    ["/", "/login", "/signup", "/spaces"].includes(pathname)
+                    [
+                      "/",
+                      "/login",
+                      "/signup",
+                      "/spaces",
+                      "/contactus",
+                      "/aboutus",
+                      "/events",
+                    ].includes(pathname)
                       ? styles.white
                       : styles.black
                   } ${
                     ["/aboutus"].includes(pathname) ? styles.activeNavItem : ""
                   }`}
+                  onClick={() => setNav(false)}
                 >
                   About Us
                 </Link>
               </li>
 
               {user ? (
-                user.role === "admin" ? (
-                  <li>
-                    <Link
-                      href="/dashboard"
-                      activeclassname={styles.activeLink}
-                      className={`${styles.menuItem} ${
-                        ["/", "/login", "/signup", "/spaces"].includes(pathname)
-                          ? styles.white
-                          : styles.black
-                      }`}
-                    >
-                      Dashboard
-                    </Link>
-                  </li>
+                user.role === "Admin" ? (
+                  <>
+                    <li>
+                      <Link
+                        href="/dashboard"
+                        activeclassname={styles.activeLink}
+                        className={`${styles.menuItem} ${
+                          [
+                            "/",
+                            "/login",
+                            "/signup",
+                            "/spaces",
+                            "/contactus",
+                            "/aboutus",
+                            "/events",
+                          ].includes(pathname)
+                            ? styles.white
+                            : styles.black
+                        }`}
+                        onClick={() => setNav(false)}
+                      >
+                        Dashboard
+                      </Link>
+                    </li>
+                    <li>
+                      <IconButton
+                        className={`${styles.logout}`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          LogOut();
+                          router.push("/");
+                        }}
+                      >
+                        <LogoutIcon />
+                      </IconButton>
+                    </li>
+                  </>
+                ) : user.role === "Manager" ? (
+                  <>
+                    <li>
+                      <Link
+                        href="/dashboard/Manager"
+                        activeclassname={styles.activeLink}
+                        className={`${styles.menuItem} ${
+                          [
+                            "/",
+                            "/login",
+                            "/signup",
+                            "/spaces",
+                            "/contactus",
+                            "/dashboard",
+                            "/dashboard/Manager",
+                            "/aboutus",
+                            "/events",
+                          ].includes(pathname)
+                            ? styles.white
+                            : styles.black
+                        }`}
+                        onClick={() => setNav(false)}
+                      >
+                        Dashboard
+                      </Link>
+                    </li>
+                    <li>
+                      <IconButton
+                        className={`${styles.logout}`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          LogOut();
+                          router.push("/");
+                        }}
+                      >
+                        <LogoutIcon />
+                      </IconButton>
+                    </li>
+                  </>
                 ) : (
-                  <button onClick={() => logout} className={styles.button}>
-                    Logout
-                  </button>
+                  <li>
+                    <IconButton
+                      className={`${styles.logout}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        LogOut();
+                        router.push("/");
+                      }}
+                    >
+                      <LogoutIcon />
+                    </IconButton>
+                  </li>
                 )
               ) : (
                 <>
                   <li>
-                    <Link className={styles.button} href="/login">
+                    <Link
+                      className={styles.button}
+                      href="/login"
+                      onClick={() => setNav(false)}
+                    >
                       Login
                     </Link>
                   </li>
                   <li>
-                    <Link className={styles.button} href="/signup">
+                    <Link
+                      className={styles.button}
+                      href="/signup"
+                      onClick={() => setNav(false)}
+                    >
                       Sign Up
                     </Link>
                   </li>
@@ -163,7 +312,15 @@ export default function Navbar() {
           <div
             onClick={() => setNav(!nav)}
             className={`${styles.mobile_btn} ${
-              ["/", "/login", "/signup", "/spaces"].includes(pathname)
+              [
+                "/",
+                "/login",
+                "/signup",
+                "/spaces",
+                "/contactus",
+                "/aboutus",
+                "/events",
+              ].includes(pathname)
                 ? styles.white
                 : styles.black
             }`}
@@ -175,7 +332,6 @@ export default function Navbar() {
             <Link href="/profile">
               <Avatar
                 alt={user.name}
-                src={user}
                 sx={{
                   cursor: "pointer",
                   backgroundColor: "lightGrey",

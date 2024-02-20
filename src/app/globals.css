@@ -13,7 +13,10 @@
   --color-beige: #d28d48;
   --color-offWhite: #ededf5;
   --color-white: #ffffff;
+  --color-black: #000;
   --filter-shadow: 0 0 10px 4px rgba(179, 179, 179, 0.5);
+  --card-shadow: 0 0 30px 2px gray;
+  --margin-top: 6rem;
 }
 
 @media (prefers-color-scheme: dark) {

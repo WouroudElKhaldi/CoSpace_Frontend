@@ -1,9 +1,9 @@
-import styles from "./page.module.css";
+import ContactPage from "@/components/contactPage/contactPage";
 
 export default function Contact() {
   return (
-    <main className={styles.container}>
-      <p>Contact Page</p>
+    <main>
+      <ContactPage />
     </main>
   );
 }

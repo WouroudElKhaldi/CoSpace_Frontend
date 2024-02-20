@@ -11,14 +11,23 @@ export const getTopRatedSpaces = async () => {
 };
 
 export const getAllSpaces = async () => {
-  const res = await axiosInstance.post("space", {
-    status: "Accepted",
+  const res = await axiosInstance.post("space");
+
+  if (res.status !== 200) {
+    throw new Error("Failed to fetch Data");
+  }
+
+  return res.data;
+};
+
+export const getSpaceImage = async (spaceId) => {
+  const res = await axiosInstance.post("space/image/bySpace", {
+    spaceId: spaceId,
   });
 
   if (res.status !== 200) {
     throw new Error("Failed to fetch Data");
   }
 
-  console.log(res.data);
   return res.data;
 };

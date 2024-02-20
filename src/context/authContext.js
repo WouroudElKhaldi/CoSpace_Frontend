@@ -2,7 +2,7 @@
 
 import { useState, useEffect, createContext } from "react";
 import axiosInstance from "../utils/axiosInstance";
-import { redirect } from "next/navigation";
+import { Logout } from "@/fetchData/auth";
 
 export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
@@ -28,18 +28,18 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logOut = async () => {
-    await axiosInstance.post("user/logout");
+  const LogOut = () => {
+    Logout();
     setUser(null);
-    redirect("/");
   };
+
   return (
     <AuthContext.Provider
       value={{
         user,
         checkUser,
         setUser,
-        logOut,
+        LogOut,
         fetchUserData,
         setUserUpdated,
       }}

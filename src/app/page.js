@@ -1,4 +1,5 @@
 import HeroComp from "@/components/hero/hero";
+import HomePage from "@/components/homePage/HomePage";
 import { getTopRatedSpaces } from "@/fetchData/spaces";
 
 export default async function Home() {
@@ -6,6 +7,7 @@ export default async function Home() {
   return (
     <main>
       <HeroComp data={data} />
+      <HomePage />
     </main>
   );
 }

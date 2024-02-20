@@ -1,5 +1,4 @@
 .main {
-  width: 100vw;
   height: 100vh;
   display: flex;
   justify-content: flex-start;
@@ -159,5 +158,14 @@
   .info,
   .form {
     width: 100%;
+  }
+}
+
+@media (max-width: 500px) {
+  .title {
+    font-size: 25px !important;
+  }
+  .main.sign_main {
+    height: 110vh;
   }
 }

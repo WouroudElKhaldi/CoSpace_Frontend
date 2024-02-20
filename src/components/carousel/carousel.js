@@ -7,7 +7,7 @@ import styles from "./carousel.module.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-const images = [
+const imagess = [
   { src: "/hero.jpg" },
   { src: "/hero2.jpg" },
   { src: "/login.jpg" },
@@ -28,7 +28,7 @@ function LeftArrow() {
   return <div />;
 }
 
-function Carousel() {
+function Carousel({ images }) {
   const settings = {
     dots: true,
     pauseOnHover: true,
@@ -44,18 +44,16 @@ function Carousel() {
   return (
     <div className={styles.slider}>
       <Slider {...settings} className={styles.slider}>
-        {images.map((img, index) => {
+        {imagess.map((img, index) => {
           return (
-            <>
-              <Image
-                key={index}
-                className={styles.img}
-                src={img.src}
-                width={100}
-                height={100}
-                alt={`spaceImage_${index + 1}`}
-              />
-            </>
+            <Image
+              key={index}
+              className={styles.img}
+              src={img.src}
+              width={100}
+              height={100}
+              alt={`spaceImage_${index + 1}`}
+            />
           );
         })}
       </Slider>

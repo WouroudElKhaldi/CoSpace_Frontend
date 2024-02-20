@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useContext, useState } from "react";
 import styles from "../login/login.module.css";
 import Link from "next/link";
 import {
@@ -14,22 +14,52 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import OAuth from "../oAuth/oAuth";
+import { SignupFunction } from "@/fetchData/auth";
+import { AuthContext } from "@/context/authContext";
+import { useRouter } from "next/navigation";
 
 export default function SignUpComp() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = React.useState(false);
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    password: "",
+    role: "User",
+    phoneNumber: "",
+  });
+
+  const { fetchUserData } = useContext(AuthContext);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("trying to login");
+    await SignupFunction(formData);
+    await fetchUserData();
+    router.push("/");
+  };
+
   return (
-    <main className={styles.main}>
+    <main className={`${styles.main} ${styles.sign_main}`}>
       <Box
         className={styles.content__wrapper}
         sx={{
           "& .Mui-focused > .MuiOutlinedInput-notchedOutline ": {
-            border: "2px solid black !important",
+            border: "2px solid #d28d48 !important",
             borderRadius: "4px",
             bgcolor: "transparent !important",
           },
@@ -37,7 +67,7 @@ export default function SignUpComp() {
             border: "2px solid #ededf5 ",
           },
           "& .MuiInputLabel-root.Mui-focused ": {
-            color: "black",
+            color: "#d28d48",
             fontSize: "1.1rem",
             fontWeight: "500",
           },
@@ -61,7 +91,7 @@ export default function SignUpComp() {
             </p>
           </div>
           <form
-            onSubmit={() => console.log("submitted")}
+            onSubmit={(e) => handleSubmit(e)}
             action=""
             className={styles.form}
             encType="multipart/form-data"
@@ -75,6 +105,7 @@ export default function SignUpComp() {
               sx={{
                 fontFamily: "Arial !important",
               }}
+              onChange={handleChange}
             />
             <TextField
               fullWidth
@@ -85,6 +116,7 @@ export default function SignUpComp() {
               sx={{
                 fontFamily: "Arial !important",
               }}
+              onChange={handleChange}
             />
             <TextField
               fullWidth
@@ -95,6 +127,7 @@ export default function SignUpComp() {
               sx={{
                 fontFamily: "Arial !important",
               }}
+              onChange={handleChange}
             />
             <FormControl fullWidth variant="outlined">
               <InputLabel htmlFor="outlined-adornment-password">
@@ -116,6 +149,8 @@ export default function SignUpComp() {
                   </InputAdornment>
                 }
                 label="Password"
+                name="password"
+                onChange={handleChange}
               />
             </FormControl>
             <input

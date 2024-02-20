@@ -1,9 +1,9 @@
-import styles from "./about.module.css";
+import AboutUsPage from "@/components/aboutPage/aboutPage";
 
 export default function About() {
   return (
-    <main className={styles.container}>
-      <p>About Page</p>
+    <main>
+      <AboutUsPage />
     </main>
   );
 }

@@ -1,9 +1,7 @@
 import SpacesPage from "@/components/spacesPage/spacesPage";
 import styles from "./page.module.css";
-import { getAllSpaces } from "@/fetchData/spaces";
 
 export default async function Spaces() {
-  const spaceData = await getAllSpaces();
   return (
     <main>
       <section className={styles.hero_Container}>
