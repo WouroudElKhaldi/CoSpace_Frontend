@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 
 export default function SignUpComp() {
   const router = useRouter();
+  const [error, setError] = useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
@@ -48,9 +49,12 @@ export default function SignUpComp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("trying to login");
-    await SignupFunction(formData);
-    await fetchUserData();
-    router.push("/");
+    const res = await SignupFunction(formData);
+    if (res.status !== 200) {
+      setError(true);
+    } else {
+      router.push("/verify");
+    }
   };
 
   return (
@@ -89,6 +93,11 @@ export default function SignUpComp() {
                 Login
               </Link>
             </p>
+            {error && (
+              <p style={{ color: "red", fontWeight: "800" }}>
+                An error occured
+              </p>
+            )}
           </div>
           <form
             onSubmit={(e) => handleSubmit(e)}

@@ -137,6 +137,38 @@
   text-align: center;
 }
 
+.submit__button.disabled {
+  cursor: alias;
+  background-color: gray;
+}
+
+.verify_holder {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1rem;
+}
+
+.code_label {
+  color: var(--color-white);
+  font-weight: 6 00;
+  margin: 2rem 0 0 0;
+}
+
+.code_holder {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.code_input {
+  width: 3rem;
+}
+
+.code_note {
+  font-size: 15px;
+  color: var(--color-offWhite);
+}
+
 @media (max-width: 970px) {
   .content .title {
     font-size: 35px;
@@ -167,5 +199,8 @@
   }
   .main.sign_main {
     height: 110vh;
+  }
+  .code_input {
+    width: 2rem;
   }
 }

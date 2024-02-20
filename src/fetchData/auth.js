@@ -10,6 +10,7 @@ export const LoginFunction = async (data) => {
     if (res.status !== 200) {
       throw new Error("Failed to Login");
     }
+    return res;
   } catch (error) {
     console.log(error);
     throw new Error("Failed");
@@ -29,6 +30,24 @@ export const SignupFunction = async (data) => {
     if (res.status !== 200) {
       throw new Error("Failed to Sign Up");
     }
+    return res;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Failed");
+  }
+};
+
+export const VerifyFunction = async (data) => {
+  try {
+    const { email, code } = data;
+    const res = await axiosInstance.post("/user/verify", {
+      email: email,
+      code: code,
+    });
+    if (res.status !== 200) {
+      throw new Error("Failed to Verify Account");
+    }
+    return res;
   } catch (error) {
     console.log(error);
     throw new Error("Failed");

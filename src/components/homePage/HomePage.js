@@ -25,7 +25,7 @@ export default function HomePage() {
     fetchSpaces();
     fetchTopSpaces();
     setLoading(false);
-  }, [top5Spaces, spacesData, setSpacesData, setTop5Spaces]);
+  }, []);
 
   return (
     <div className={styles.container}>
