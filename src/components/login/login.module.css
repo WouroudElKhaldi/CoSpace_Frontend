@@ -160,13 +160,24 @@
   flex-wrap: wrap;
 }
 
-.code_input {
+.code_input_many {
   width: 3rem;
 }
 
 .code_note {
   font-size: 15px;
   color: var(--color-offWhite);
+}
+
+.error {
+  font-size: 12px;
+  margin: 0;
+  padding-left: 1rem;
+  color: var(--color-error);
+}
+
+.code_input_single {
+  display: none;
 }
 
 @media (max-width: 970px) {
@@ -193,14 +204,35 @@
   }
 }
 
+@media (max-width: 587px) {
+  .code_input_many {
+    width: 2.5rem;
+  }
+}
+
+@media (max-width: 530px) {
+  .code_input_many {
+    display: none;
+  }
+
+  .code_input_single {
+    margin: 0;
+    display: flex;
+  }
+  .verify_holder {
+    row-gap: 0.5rem;
+  }
+
+  .code_label {
+    margin: 0;
+  }
+}
+
 @media (max-width: 500px) {
   .title {
     font-size: 25px !important;
   }
   .main.sign_main {
     height: 110vh;
-  }
-  .code_input {
-    width: 2rem;
   }
 }

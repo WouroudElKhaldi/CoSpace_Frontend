@@ -12,6 +12,10 @@
   border-radius: 15px;
 }
 
+.card.home .img {
+  width: 100%;
+}
+
 .info {
   border-radius: 0 0 15px 15px;
   padding: 10px 10px 30px 10px;

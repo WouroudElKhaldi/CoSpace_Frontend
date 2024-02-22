@@ -11,14 +11,22 @@ import ChairIcon from "@mui/icons-material/Chair";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import { getAllSpaces } from "@/fetchData/spaces";
+import { getAllSpaces, filterSpaces } from "@/fetchData/spaces";
 import useSpaceStore from "@/zustand/spaceStore";
 import { getAmenities } from "@/fetchData/amenities";
 import useAmenityStore from "@/zustand/amenitiesStore";
+import { getCategories } from "@/fetchData/categories";
+import useCategoryStore from "@/zustand/categoryStore";
 
 export default function SpacesPage() {
   const { spacesData, setSpacesData } = useSpaceStore();
   const { amenitiesData, setAmenitiesData } = useAmenityStore();
+  const { categoryData, setCategoryData } = useCategoryStore();
+
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(1000);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedAmenities, setSelectedAmenities] = useState([]);
 
   useEffect(() => {
     const fetchSpaceData = async () => {
@@ -31,41 +39,32 @@ export default function SpacesPage() {
       setAmenitiesData(res);
     };
 
+    const fetchCategoryData = async () => {
+      const res = await getCategories();
+      setCategoryData(res);
+    };
+
+    fetchCategoryData();
     fetchAmenityData();
     fetchSpaceData();
   }, []);
 
-  const filterData = async () => {};
-  const amenities = [
-    {
-      name: "Amnity1",
-      _id: "12314weedas12eq",
-      category: "Business Facilities",
-    },
-    {
-      name: "Amnity2",
-      _id: "12314weedas12eq",
-      category: "Additional Facilities",
-    },
-    {
-      name: "Amnity3",
-      _id: "12314weedas12eq",
-      category: "Additional Facilities",
-    },
-    {
-      name: "Amnity4",
-      _id: "12314weedas12eq",
-      category: "Additional Facilities",
-    },
-    { name: "Amnity5", _id: "12314weedas12eq", category: "Freebies" },
-    { name: "Amnity5", _id: "12314weedas12eq", category: "Freebies" },
-    { name: "Amnity5", _id: "12314weedas12eq", category: "Freebies" },
-    { name: "Amnity6", _id: "12314weedas12eq", category: "Freebies" },
-    { name: "Amnity7", _id: "12314weedas12eq", category: "Freebies" },
-    { name: "Amnity8", _id: "12314weedas12eq", category: "Parking/Storage" },
-    { name: "Amnity9", _id: "12314weedas12eq", category: "Parking/Storage" },
-    { name: "Amnity0", _id: "12314weedas12eq", category: "Parking/Storage" },
-  ];
+  const filterData = async () => {
+    const res = await filterSpaces({
+      minPrice: minPrice,
+      maxPrice: maxPrice,
+      selectedAmenities: selectedAmenities,
+      selectedCategories: selectedCategories,
+    });
+    // setSpacesData(res);
+  };
+
+  useEffect(() => {
+    // Check if any amenity or category is chosen
+    if (selectedAmenities.length > 0 || selectedCategories.length > 0) {
+      filterData();
+    }
+  }, [selectedAmenities, selectedCategories, maxPrice, minPrice]);
 
   const [expanded, setExpanded] = useState(new Array(12).fill(false));
   const [collapsed, setCollapsed] = useState(false);
@@ -78,7 +77,7 @@ export default function SpacesPage() {
   };
 
   // Group amenities by category
-  const groupedAmenities = amenities.reduce((acc, amenity) => {
+  const groupedAmenities = amenitiesData.reduce((acc, amenity) => {
     if (!acc[amenity.category]) {
       acc[amenity.category] = [];
     }
@@ -133,12 +132,24 @@ export default function SpacesPage() {
           >
             <div className={styles.input_holder}>
               <span className={styles.single_input}>
-                <input type="number" className={styles.input_Number} />
+                <input
+                  type="number"
+                  className={styles.input_Number}
+                  onChange={(e) => {
+                    setMinPrice(e.target.value);
+                  }}
+                />
                 <span className={styles.dolar_Input}>$</span>
               </span>
               -
               <span className={styles.single_input}>
-                <input type="number" className={styles.input_Number} />
+                <input
+                  type="number"
+                  className={styles.input_Number}
+                  onChange={(e) => {
+                    setMaxPrice(e.target.value);
+                  }}
+                />
                 <span className={styles.dolar_Input}>$</span>
               </span>
             </div>
@@ -162,16 +173,42 @@ export default function SpacesPage() {
               expanded[1] ? styles.shown : styles.hidden
             }`}
           >
-            <div className={styles.input_holder}>
-              <span className={styles.single_input}>
-                <input type="number" className={styles.input_Number} />
-                <span className={styles.dolar_Input}>$</span>
-              </span>
-              -
-              <span className={styles.single_input}>
-                <input type="number" className={styles.input_Number} />
-                <span className={styles.dolar_Input}>$</span>
-              </span>
+            <div>
+              <ul className={styles.checkbox_holder}>
+                {categoryData.map((category, index) => {
+                  return (
+                    <li key={index}>
+                      <label
+                        htmlFor={category._id}
+                        className={styles.checkbox_label}
+                      >
+                        <input
+                          type="checkbox"
+                          name={category.name}
+                          value={category._id}
+                          id={category._id}
+                          className={styles.checkbox}
+                          onChange={() => {
+                            if (selectedCategories.includes(category._id)) {
+                              setSelectedCategories(
+                                selectedCategories.filter(
+                                  (id) => id !== category._id
+                                )
+                              );
+                            } else {
+                              setSelectedCategories([
+                                ...selectedCategories,
+                                category._id,
+                              ]);
+                            }
+                          }}
+                        />
+                        {category.name}
+                      </label>
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
           </div>
           <div
@@ -216,13 +253,30 @@ export default function SpacesPage() {
                       <ul className={styles.checkbox_holder}>
                         {groupedAmenities[category].map((amenity, idx) => (
                           <li key={idx}>
-                            <label className={styles.checkbox_label}>
+                            <label
+                              htmlFor={amenity.name}
+                              className={styles.checkbox_label}
+                            >
                               <input
                                 type="checkbox"
                                 name={amenity.name}
                                 id={amenity.name}
                                 value={amenity._id}
                                 className={styles.checkbox}
+                                onChange={() => {
+                                  if (selectedAmenities.includes(amenity._id)) {
+                                    setSelectedAmenities(
+                                      selectedAmenities.filter(
+                                        (id) => id !== amenity._id
+                                      )
+                                    );
+                                  } else {
+                                    setSelectedAmenities([
+                                      ...selectedAmenities,
+                                      amenity._id,
+                                    ]);
+                                  }
+                                }}
                               />
                               {amenity.name}
                             </label>
@@ -252,8 +306,15 @@ export default function SpacesPage() {
             }}
           >
             <SearchIcon className={styles.search_icon} />
-            <input type="text" className={styles.search_input} />
+            <input
+              type="text"
+              className={styles.search_input}
+              placeholder="Search by name"
+            />
           </span>
+          <button>
+            <ExpandMoreIcon />
+          </button>
           <p>{spacesData.length} results</p>
         </span>
         <div className={styles.card__Container}>

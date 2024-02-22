@@ -15,12 +15,17 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import OAuth from "../oAuth/oAuth";
 import { SignupFunction } from "@/fetchData/auth";
-import { AuthContext } from "@/context/authContext";
 import { useRouter } from "next/navigation";
+
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const PASSWORD_REGEX =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&^])[A-Za-z\d@.#$!%*?&]{8,15}$/;
 
 export default function SignUpComp() {
   const router = useRouter();
   const [error, setError] = useState(false);
+  const [passwordValid, setPasswordValid] = useState(true);
+  const [emailValid, setEmailValid] = useState(true);
   const [showPassword, setShowPassword] = React.useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
@@ -30,7 +35,26 @@ export default function SignUpComp() {
     phoneNumber: "",
   });
 
-  const { fetchUserData } = useContext(AuthContext);
+  const { fullName, email, password, role, phoneNumber } = formData;
+
+  // error validsation
+  const validateFormData = () => {
+    if (!fullName || !email || !password || !phoneNumber) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const validateEmail = (email) => {
+    return EMAIL_REGEX.test(email);
+  };
+
+  const validatePassword = (password) => {
+    return PASSWORD_REGEX.test(password);
+  };
+
+  const formValidation = validateFormData();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -38,22 +62,39 @@ export default function SignUpComp() {
     event.preventDefault();
   };
 
+  ////
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
     }));
+    setEmailValid(true);
+    setPasswordValid(true);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("trying to login");
-    const res = await SignupFunction(formData);
-    if (res.status !== 200) {
-      setError(true);
-    } else {
-      router.push("/verify");
+    // Validate email and password before submitting
+    const isEmailValid = validateEmail(formData.email);
+    const isPasswordValid = validatePassword(formData.password);
+
+    if (!isEmailValid) {
+      setEmailValid(false);
+    }
+    if (!isPasswordValid) {
+      setPasswordValid(false);
+    }
+
+    if (isEmailValid && isPasswordValid) {
+      const res = await SignupFunction(formData);
+      if (res.status !== 200) {
+        setError(true);
+      } else {
+        router.push("/verify");
+      }
     }
   };
 
@@ -69,6 +110,7 @@ export default function SignUpComp() {
           },
           "& .MuiOutlinedInput-notchedOutline": {
             border: "2px solid #ededf5 ",
+            color: "white",
           },
           "& .MuiInputLabel-root.Mui-focused ": {
             color: "#d28d48",
@@ -80,6 +122,12 @@ export default function SignUpComp() {
           },
           "& .MuiFormControl-root > label": {
             color: "#ededf5",
+          },
+          ".MuiFormHelperText-root.Mui-error": {
+            color: "#8B0000",
+          },
+          "& .Mui-error > fieldset ": {
+            border: "2px solid #8B0000 !important",
           },
         }}
       >
@@ -126,6 +174,8 @@ export default function SignUpComp() {
                 fontFamily: "Arial !important",
               }}
               onChange={handleChange}
+              error={!emailValid}
+              helperText={!emailValid && "Invalid email"}
             />
             <TextField
               fullWidth
@@ -138,34 +188,47 @@ export default function SignUpComp() {
               }}
               onChange={handleChange}
             />
-            <FormControl fullWidth variant="outlined">
-              <InputLabel htmlFor="outlined-adornment-password">
-                Password
-              </InputLabel>
-              <OutlinedInput
-                id="outlined-adornment-password"
-                type={showPassword ? "text" : "password"}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      edge="end"
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                label="Password"
-                name="password"
-                onChange={handleChange}
-              />
-            </FormControl>
+            <span>
+              <FormControl fullWidth variant="outlined" helperText="hii">
+                <InputLabel htmlFor="outlined-adornment-password">
+                  Password
+                </InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-password"
+                  type={showPassword ? "text" : "password"}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Password"
+                  name="password"
+                  onChange={handleChange}
+                  error={!passwordValid}
+                  helperText={"Invalid password"}
+                />
+              </FormControl>
+              {!passwordValid && (
+                <p className={styles.error}>
+                  Password must be 8 digits, 1 Lowercase, 1 Uppercase, 1 number
+                  and 1 special character
+                </p>
+              )}
+            </span>
             <input
               type="submit"
-              value={"Sign Up"}
-              className={styles.submit__button}
+              value={"Sign up"}
+              className={`${styles.submit__button} ${
+                formValidation === false ? styles.disabled : ""
+              }`}
+              disabled={formValidation === false}
             />
             <div className={styles.or__hr}>
               <hr />

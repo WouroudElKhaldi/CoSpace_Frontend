@@ -14,7 +14,7 @@ const VerifyComp = () => {
   });
 
   const router = useRouter();
-  const { fetchUserData } = useContext(AuthContext);
+  const { user, fetchUserData, LogOut } = useContext(AuthContext);
   const [code, setCode] = useState(Array(8).fill(""));
   const [error, setError] = useState(false);
   const [emailValid, setEmailValid] = useState(true);
@@ -29,9 +29,10 @@ const VerifyComp = () => {
       ...prevFormData,
       code: newCode.join(""),
     }));
-    setCodeValid(
-      newCode.join("").length === 8 && /[a-zA-Z]/.test(newCode.join(""))
-    );
+
+    if (newCode.join("").length === 8) {
+      setCodeValid(true);
+    }
   };
 
   const handleEmailChange = (event) => {
@@ -40,24 +41,58 @@ const VerifyComp = () => {
       ...prevFormData,
       email: value,
     }));
-    setEmailValid(validateEmail(value));
+    setEmailValid(true);
   };
 
+  // error validsation
   const validateEmail = (email) => {
     // Basic email validation
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
+  const validateCode = (code) => {
+    return code.length === 8 && /[a-zA-Z]/.test(code);
+  };
+
+  const validateFormData = () => {
+    if (!formData.code || !formData.email) {
+      return false;
+    }
+
+    if (formData.code.length < 8) {
+      return false;
+    }
+
+    if (validateCode(formData.code) === false) {
+      return false;
+    }
+    return true;
+  };
+
+  const formValidation = validateFormData();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("trying to verify");
     // Perform validation before submission
+    const isCodeValid = validateCode(formData.code);
+    const isEmailValid = validateEmail(formData.email);
+
+    if (!isEmailValid) {
+      setEmailValid(false);
+    }
+    if (!isCodeValid) {
+      setCodeValid(false);
+    }
+
     if (emailValid && codeValid) {
       const res = await VerifyFunction(formData);
       await fetchUserData();
       if (res.status !== 200) {
         setError(true);
       } else {
+        if (user !== null) {
+          await LogOut();
+        }
         router.push("/");
       }
     } else {
@@ -122,7 +157,6 @@ const VerifyComp = () => {
                 fontFamily: "Arial !important",
               }}
               onChange={handleEmailChange}
-              onBlur={() => setEmailValid(validateEmail(formData.email))}
               error={!emailValid}
               helperText={!emailValid && "Invalid email"}
             />
@@ -134,12 +168,21 @@ const VerifyComp = () => {
                     key={index}
                     name={`digit${index + 1}`}
                     type="text"
-                    className={styles.code_input}
+                    className={styles.code_input_many}
                     value={digit}
                     onChange={handleChange(index)}
+                    inputProps={{ maxLength: 1 }}
                   />
                 ))}
               </div>
+              <TextField
+                type="text"
+                name={`digit${0}`}
+                value={formData.code}
+                onChange={handleChange(0)}
+                inputProps={{ maxLength: 8 }}
+                className={styles.code_input_single}
+              />
               <p className={styles.code_note}>
                 {!codeValid
                   ? "Code must be 8 digits and must have at least on letter"
@@ -150,7 +193,7 @@ const VerifyComp = () => {
               type="submit"
               value={"Verify"}
               className={`${styles.submit__button} ${
-                !codeValid ? styles.disabled : ""
+                !formValidation ? styles.disabled : ""
               }`}
               disabled={!emailValid || !codeValid}
             />

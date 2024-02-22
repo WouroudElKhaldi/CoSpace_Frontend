@@ -18,14 +18,39 @@ import { LoginFunction } from "@/fetchData/auth";
 import { AuthContext } from "@/context/authContext";
 import { useRouter } from "next/navigation";
 
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const PASSWORD_REGEX =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&^])[A-Za-z\d@.#$!%*?&]{8,15}$/;
+
 export default function LoginComp() {
   const router = useRouter();
   const { fetchUserData } = useContext(AuthContext);
+  const [passwordValid, setPasswordValid] = useState(true);
+  const [emailValid, setEmailValid] = useState(true);
+  const [error, setError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
+  const { email, password } = formData;
+  const validateFormData = () => {
+    if (!email || !password) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+  const formValidation = validateFormData();
+
+  const validateEmail = (email) => {
+    return EMAIL_REGEX.test(email);
+  };
+
+  const validatePassword = (password) => {
+    return PASSWORD_REGEX.test(password);
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -33,14 +58,33 @@ export default function LoginComp() {
       ...prevFormData,
       [name]: value,
     }));
+    setEmailValid(true);
+    setPasswordValid(true);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("trying to login");
-    await LoginFunction(formData);
-    await fetchUserData();
-    router.push("/");
+    // Validate email and password before submitting
+    const isEmailValid = validateEmail(formData.email);
+    const isPasswordValid = validatePassword(formData.password);
+
+    if (!isEmailValid) {
+      setEmailValid(false);
+    }
+    if (!isPasswordValid) {
+      setPasswordValid(false);
+    }
+
+    if (isEmailValid && isPasswordValid) {
+      const res = await LoginFunction(formData);
+      if (res.status !== 200) {
+        setError(true);
+      } else {
+        await fetchUserData();
+        router.push("/");
+      }
+    }
   };
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -60,6 +104,7 @@ export default function LoginComp() {
           },
           "& .MuiOutlinedInput-notchedOutline": {
             border: "2px solid #ededf5 ",
+            color: "white",
           },
           "& .MuiInputLabel-root.Mui-focused ": {
             color: "#d28d48",
@@ -72,6 +117,12 @@ export default function LoginComp() {
           "& .MuiFormControl-root > label": {
             color: "#ededf5",
           },
+          ".MuiFormHelperText-root.Mui-error": {
+            color: "#8B0000",
+          },
+          "& .Mui-error > fieldset ": {
+            border: "2px solid #8B0000 !important",
+          },
         }}
       >
         <div className={styles.content}>
@@ -83,6 +134,11 @@ export default function LoginComp() {
                 Sign up
               </Link>
             </p>
+            {error && (
+              <p style={{ color: "red", fontWeight: "800" }}>
+                An error occured
+              </p>
+            )}
           </div>
           <form
             onSubmit={(e) => handleSubmit(e)}
@@ -100,35 +156,49 @@ export default function LoginComp() {
                 fontFamily: "Arial !important",
               }}
               onChange={handleChange}
+              error={!emailValid}
+              helperText={!emailValid && "Invalid email"}
             />
-            <FormControl fullWidth variant="outlined">
-              <InputLabel htmlFor="outlined-adornment-password">
-                Password
-              </InputLabel>
-              <OutlinedInput
-                id="outlined-adornment-password"
-                type={showPassword ? "text" : "password"}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      edge="end"
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                label="Password"
-                name="password"
-                onChange={handleChange}
-              />
-            </FormControl>
+            <span>
+              <FormControl fullWidth variant="outlined">
+                <InputLabel htmlFor="outlined-adornment-password">
+                  Password
+                </InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-password"
+                  type={showPassword ? "text" : "password"}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Password"
+                  name="password"
+                  onChange={handleChange}
+                  error={!passwordValid}
+                />
+              </FormControl>
+              {!passwordValid && (
+                <p className={styles.error}>
+                  Password must be 8 digits, 1 Lowercase, 1 Uppercase, 1 number
+                  and 1 special character
+                </p>
+              )}
+            </span>
             <input
               type="submit"
               value={"Log in"}
-              className={styles.submit__button}
+              className={`${styles.submit__button} ${
+                formValidation === false ? styles.disabled : ""
+              }`}
+              disabled={formValidation === false}
             />
             <div className={styles.or__hr}>
               <hr />
