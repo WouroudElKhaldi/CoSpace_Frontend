@@ -58,11 +58,17 @@ export const filterSpaces = async ({
 };
 
 // search a space by name or city
-export const searchSpace = async ({ name, city }) => {
-  const res = await axiosInstance.post("space/search", {
-    name: name,
-    city: city,
-  });
+export const searchSpace = async ({ criteria, search }) => {
+  let res;
+  if (criteria === "name") {
+    res = await axiosInstance.post("space/search", {
+      name: search,
+    });
+  } else if (criteria === "cityName") {
+    res = await axiosInstance.post("space/search", {
+      cityName: search,
+    });
+  }
 
   if (res.status !== 200) {
     throw new Error("Failed to fetch Data");

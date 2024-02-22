@@ -46,16 +46,9 @@ const Table = ({
   let visibleFields;
   useEffect(() => {
     try {
-      if (ForWhat === "users") {
-        visibleFields = [
-          "fullName",
-          "role",
-          "email",
-          "phoneNumber",
-          "image",
-          "status"
-        ];
-      } else if (ForWhat === "products") {
+      if (ForWhat === "spaces") {
+        visibleFields = ["name", "address", "description", "status"];
+      } else if (ForWhat === "users") {
         visibleFields = [
           "name",
           "image",
@@ -262,6 +255,8 @@ const Table = ({
         }}
       >
         <DataGrid
+          // showCellVerticalBorder
+          // showColumnVerticalBorder
           isCellEditable={(GridCellParams) => false}
           columns={columns}
           rows={data}
@@ -281,22 +276,35 @@ const Table = ({
             },
           }}
           sx={{
-            fontFamily: "Helvetica Neue",
-            marginBottom: "4rem",
+            p: "1rem",
+            rowGap: "1rem",
+            borderRadius: "20px",
             width: "98%",
-            border: "solid 1px #BABABA",
+            border: "transparent",
             "& .MuiToolbar-root , .MuiInputBase-input , .MuiDataGrid-columnHeaderTitleContainer , .MuiDataGrid-cell":
               {
                 color: "black",
               },
-            "& .MuiButtonBase-root , & .MuiSvgIcon-root , &  .MuiSvgIcon-root":
-              {
-                color: "#C86823",
-              },
+            "& .MuiButtonBase-root ": {
+              color: "#4d6188",
+            },
+            ".MuiSvgIcon-root ": {
+              color: "#8b0000",
+            },
             "& .MuiDataGrid-root , .MuiDataGrid-colCell, .MuiDataGrid-root , .MuiDataGrid-cell":
               {
-                maxHeight: "150px !important",
+                maxHeight: "100px !important",
               },
+            ".MuiDataGrid-toolbarContainer": {
+              fontWeight: "700",
+              borderRadius: "15px",
+              bgcolor: "#ededf5",
+              p: "0 1rem",
+            },
+            ".MuiDataGrid-main , .MuiDataGrid-footerContainer": {
+              bgcolor: "#ededf5",
+              borderRadius: "15px",
+            },
             "& .MuiDataGrid-root > *": {
               height: "100%",
             },
@@ -304,14 +312,14 @@ const Table = ({
               color: "#000",
             },
             "& .css-v4u5dn-MuiInputBase-root-MuiInput-root:after": {
-              borderBottomColor: "#C86823",
+              borderBottomColor: "#4d6188",
             },
             " & .Mui-selected ": {
-              bgcolor: "#C86823 !important",
+              bgcolor: "#4d6188 !important",
             },
             "& .MuiDataGrid-row": {
-              height: "150px !important",
-              maxHeight: "150px !important",
+              height: "90px !important",
+              maxHeight: "90px !important",
             },
             "& .Mui-hovered": {
               bgcolor: " #08829557 !important",
@@ -327,16 +335,16 @@ const Table = ({
                 mb: screenWidth < 500 ? "1rem" : "0",
               },
             "& .MuiDataGrid-columnHeaderTitleContainer": {
-              color: "#C86823 !important",
+              color: "#4d6188 !important",
             },
             ".MuiDataGrid-cell": {
               width: "8rem",
-              maxHeight: "150px",
-              height: "150px",
+              maxHeight: "90px",
+              height: "90px",
             },
             "& .MuiSelect-select , & .MuiTablePagination-select , & .MuiSelect-standard MuiInputBase-input css-194a1fa-MuiSelect-select-MuiInputBase-input":
               {
-                color: "#C86823 !important",
+                color: "#4d6188 !important",
               },
           }}
         />

@@ -11,12 +11,13 @@ import ChairIcon from "@mui/icons-material/Chair";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import { getAllSpaces, filterSpaces } from "@/fetchData/spaces";
+import { getAllSpaces, filterSpaces, searchSpace } from "@/fetchData/spaces";
 import useSpaceStore from "@/zustand/spaceStore";
 import { getAmenities } from "@/fetchData/amenities";
 import useAmenityStore from "@/zustand/amenitiesStore";
 import { getCategories } from "@/fetchData/categories";
 import useCategoryStore from "@/zustand/categoryStore";
+import { Box } from "@mui/material";
 
 export default function SpacesPage() {
   const { spacesData, setSpacesData } = useSpaceStore();
@@ -25,25 +26,37 @@ export default function SpacesPage() {
 
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(1000);
+  const [formData, setFormData] = useState({
+    criteria: "",
+    search: "",
+  });
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedAmenities, setSelectedAmenities] = useState([]);
 
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
+  const fetchSpaceData = async () => {
+    const res = await getAllSpaces();
+    setSpacesData(res);
+  };
+
+  const fetchAmenityData = async () => {
+    const res = await getAmenities();
+    setAmenitiesData(res);
+  };
+
+  const fetchCategoryData = async () => {
+    const res = await getCategories();
+    setCategoryData(res);
+  };
+
   useEffect(() => {
-    const fetchSpaceData = async () => {
-      const res = await getAllSpaces();
-      setSpacesData(res);
-    };
-
-    const fetchAmenityData = async () => {
-      const res = await getAmenities();
-      setAmenitiesData(res);
-    };
-
-    const fetchCategoryData = async () => {
-      const res = await getCategories();
-      setCategoryData(res);
-    };
-
     fetchCategoryData();
     fetchAmenityData();
     fetchSpaceData();
@@ -57,6 +70,13 @@ export default function SpacesPage() {
       selectedCategories: selectedCategories,
     });
     // setSpacesData(res);
+  };
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    const { criteria, search } = formData;
+    const res = await searchSpace({ criteria, search });
+    setSpacesData(res);
   };
 
   useEffect(() => {
@@ -291,7 +311,37 @@ export default function SpacesPage() {
           </div>
         </div>
       </aside>
-      <div className={styles.card_main}>
+      <Box
+        className={styles.card_main}
+        sx={{
+          ".MuiSelect-select.MuiSelect-outlined.MuiInputBase-input.MuiOutlinedInput-input ":
+            {
+              maxHeight: "2.5rem",
+              height: "2.5rem",
+              padding: 0,
+            },
+          ".MuiSelect-nativeInput": {
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          },
+          ".MuiInputLabel-root": {
+            top: "-7px",
+            color: "#4d6188",
+          },
+          ".Mui-focused.MuiInputLabel-root": {
+            top: 0,
+          },
+          ".MuiSelect-select.MuiSelect-outlined.MuiInputBase-input.MuiOutlinedInput-input":
+            {
+              display: "flex",
+              alignItems: "center",
+              paddingLeft: "0.5rem",
+              fontSize: "0.9rem",
+            },
+        }}
+      >
         <button
           className={styles.filter_collapse}
           onClick={() => setCollapsed(true)}
@@ -300,29 +350,77 @@ export default function SpacesPage() {
           <FilterListIcon className={styles.filter_icon1} />
         </button>
         <span className={styles.search_holder}>
-          <span
-            style={{
-              height: "100%",
-            }}
-          >
+          <form className={styles.span} onSubmit={(e) => handleSearch(e)}>
             <SearchIcon className={styles.search_icon} />
             <input
               type="text"
               className={styles.search_input}
-              placeholder="Search by name"
+              placeholder="Search"
+              name="search"
+              id="search"
+              value={formData.search}
+              onChange={handleChange}
             />
+            <select
+              name="criteria"
+              id="criteria"
+              onChange={handleChange}
+              className={styles.select}
+              value={formData.criteria}
+            >
+              <option className={styles.option} value="name" disabled selected>
+                By
+              </option>
+              <option className={styles.option} value="name">
+                Name
+              </option>
+              <option className={styles.option} value="cityName">
+                City
+              </option>
+            </select>
+          </form>
+          {/* <FormControl className={styles.button}>
+            <InputLabel id="demo-simple-select-label">By</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              label="By"
+              name="criteria"
+              onChange={handleChange}
+            >
+              <MenuItem value={"name"}>Name</MenuItem>
+              <MenuItem value={"cityName"}>City</MenuItem>
+            </Select>
+          </FormControl> */}
+          <span
+            className={styles.clear}
+            onClick={() => {
+              setFormData({
+                criteria: "",
+                search: "",
+              });
+              fetchSpaceData();
+            }}
+          >
+            Clear
           </span>
-          <button>
-            <ExpandMoreIcon />
-          </button>
-          <p>{spacesData.length} results</p>
         </span>
+        <p>
+          {spacesData.length}{" "}
+          {formData === null
+            ? "Results for all spaces"
+            : formData.criteria === "name"
+            ? `Results for spaces with name : ${formData.search}`
+            : formData.criteria === "name"
+            ? `Results for spaces in city : ${formData.search}`
+            : "Results for all spaces"}
+        </p>
         <div className={styles.card__Container}>
           {spacesData.map((space, index) => (
             <SpaceCard key={index} data={space} />
           ))}
         </div>
-      </div>
+      </Box>
     </section>
   );
 }

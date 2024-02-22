@@ -6,9 +6,11 @@ import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import Link from "next/link";
 
-function Footer() {
+function Footer({ width }) {
   return (
-    <footer className={styles.footer}>
+    <footer
+      className={`${styles.footer} ${width !== null ? styles.width : ""}`}
+    >
       <div className={styles.top}>
         <div className={styles.links}>
           <div className={styles.linksColumn}>
