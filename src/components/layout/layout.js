@@ -16,7 +16,7 @@ export default function NormalLayout({ children }) {
       {/* Only render Navbar and Footer if not on '/dashboard' */}
       {!isDashboard && <Navbar />}
       {children}
-      {!isDashboard && <Footer width="100%" />}
+      {!isDashboard && <Footer width="90%" />}
     </AuthProvider>
   );
 }

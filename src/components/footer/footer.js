@@ -9,7 +9,10 @@ import Link from "next/link";
 function Footer({ width }) {
   return (
     <footer
-      className={`${styles.footer} ${width !== null ? styles.width : ""}`}
+      className={`${styles.footer}`}
+      style={{
+        width: width
+      }}
     >
       <div className={styles.top}>
         <div className={styles.links}>

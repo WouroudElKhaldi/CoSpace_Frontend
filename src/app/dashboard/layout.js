@@ -1,4 +1,4 @@
-import DashLayout from "@/components/dashLayout/dashLayout";
+import DashLayout from "@/components/(dashboard)/dashLayout/dashLayout";
 
 export const metadata = {
   title: "CoSpace - Common Dashboard",

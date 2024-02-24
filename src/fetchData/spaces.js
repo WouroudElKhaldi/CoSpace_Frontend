@@ -22,6 +22,19 @@ export const getAllSpaces = async () => {
   return res.data;
 };
 
+// getting all the spaces (approved)
+export const getSpacesByUser = async ({ userId }) => {
+  const res = await axiosInstance.post("space/byUser", {
+    userId: userId,
+  });
+
+  if (res.status !== 200) {
+    throw new Error("Failed to fetch Data");
+  }
+
+  return res.data;
+};
+
 // getting space images
 export const getSpaceImage = async (spaceId) => {
   const res = await axiosInstance.post("space/image/bySpace", {
@@ -72,6 +85,18 @@ export const searchSpace = async ({ criteria, search }) => {
 
   if (res.status !== 200) {
     throw new Error("Failed to fetch Data");
+  }
+
+  return res.data;
+};
+
+// getting space images
+export const deleteSpace = async ({ spaceId }) => {
+  console.log(spaceId);
+  const res = await axiosInstance.delete("space", { data: { id: spaceId } });
+
+  if (res.status !== 200) {
+    throw new Error("Failed to delete space");
   }
 
   return res.data;

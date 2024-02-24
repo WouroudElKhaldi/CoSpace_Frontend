@@ -50,16 +50,14 @@ const Table = ({
         visibleFields = ["name", "address", "description", "status"];
       } else if (ForWhat === "users") {
         visibleFields = [
-          "name",
+          "fullName",
+          "role",
+          "email",
+          "phoneNumber",
+          "verificationCode",
+          "deleteCode",
+          "status",
           "image",
-          "description",
-          "price",
-          "weight",
-          "slug",
-          "ingredients",
-          "stock",
-          "category",
-          "color",
         ];
       } else if (ForWhat === "categories") {
         visibleFields = ["name", "name_AR"];
@@ -92,7 +90,7 @@ const Table = ({
       const updatedColumns = visibleFields.map((field) => ({
         field,
         headerName: field,
-        flex: screenWidth < 800 ? 0 : 1,
+        flex: screenWidth < 1000 ? 0 : 1,
         renderCell: (params) => {
           if (field === "image" && params.row.image) {
             return (
@@ -121,51 +119,9 @@ const Table = ({
               ></div>
             );
           }
-          if (field === "ingredients" && params.row.ingredients) {
-            const ingredientsList = params.row.ingredients
-              .split(",")
-              .map((ingredient) => ingredient.trim());
-            return (
-              <>
-                <ul
-                  style={{
-                    listStyle: "none",
-                    overflowX: "scroll",
-                    maxHeight: "7rem",
-                  }}
-                >
-                  {ingredientsList.map((ingredient, index) => (
-                    <li key={index}>{ingredient}</li>
-                  ))}
-                </ul>
-              </>
-            );
-          }
-          if (field === "weight" && params.row.weight) {
-            const weight = params.row.weight;
-            return <div>{weight} Gr</div>;
-          }
           if (field === "price" && params.row.price) {
             const price = params.row.price;
             return <div>${price}</div>;
-          }
-          if (field === "stock" && params.row.stock) {
-            const stock =
-              params.row.stock === true ? "There is Stock" : "Stock Empty";
-            return (
-              <p
-                style={{
-                  color: "black",
-                }}
-              >
-                {stock}
-              </p>
-            );
-          }
-
-          if (field === "totalPrice" && params.row.totalPrice) {
-            const price = params.row.totalPrice;
-            return <div>${" " + price}</div>;
           }
 
           if (
@@ -182,10 +138,6 @@ const Table = ({
                 {params.row.userId.firstName + " " + params.row.userId.lastName}
               </p>
             );
-          }
-
-          if (field === "products" && params.row.orderDetails) {
-            return <div>{" " + params.row.orderDetails.length} products</div>;
           }
 
           if (field === "category" && params.row.category) {
@@ -211,13 +163,17 @@ const Table = ({
             <Grid
               container
               md={12}
-              sx={{ display: "flex", justifyContent: "center" }}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                minWidth: "5rem",
+              }}
             >
               <IconButton onClick={(e) => handleEdit(e, params.row)}>
                 <EditIcon
                   sx={{
                     ":hover": {
-                      color: "#A0471D !important",
+                      color: "red !important",
                     },
                   }}
                 />
@@ -226,7 +182,7 @@ const Table = ({
                 <DeleteIcon
                   sx={{
                     ":hover": {
-                      color: "#A0471D !important",
+                      color: "red !important",
                     },
                   }}
                 />
@@ -248,15 +204,14 @@ const Table = ({
     <>
       <Box
         sx={{
-          height: 707,
-          mt: "3rem",
-          mb: "3rem",
-          fontFamily: "Helvetica Neue",
+          height: 818,
+          mt: "2rem",
+          mb: "2rem",
         }}
       >
         <DataGrid
-          // showCellVerticalBorder
-          // showColumnVerticalBorder
+          showCellVerticalBorder
+          showColumnVerticalBorder
           isCellEditable={(GridCellParams) => false}
           columns={columns}
           rows={data}
@@ -276,11 +231,11 @@ const Table = ({
             },
           }}
           sx={{
+            width: "100%",
+            transition: "all 0.05s ease",
             p: "1rem",
             rowGap: "1rem",
             borderRadius: "20px",
-            width: "98%",
-            border: "transparent",
             "& .MuiToolbar-root , .MuiInputBase-input , .MuiDataGrid-columnHeaderTitleContainer , .MuiDataGrid-cell":
               {
                 color: "black",
@@ -295,6 +250,9 @@ const Table = ({
               {
                 maxHeight: "100px !important",
               },
+            ".MuiDataGrid-cell": {
+              paddingLeft: "0.5rem",
+            },
             ".MuiDataGrid-toolbarContainer": {
               fontWeight: "700",
               borderRadius: "15px",
@@ -322,10 +280,10 @@ const Table = ({
               maxHeight: "90px !important",
             },
             "& .Mui-hovered": {
-              bgcolor: " #08829557 !important",
+              bgcolor: " #4d61886e !important",
             },
             "& .Mui-selected": {
-              bgcolor: "#08829557 !important",
+              bgcolor: "#4d61886e !important",
             },
             "& .MuiDataGrid-columnHeaders , & .MuiDataGrid-toolbarContainer , & .MuiDataGrid-footerContainer":
               {
@@ -336,16 +294,41 @@ const Table = ({
               },
             "& .MuiDataGrid-columnHeaderTitleContainer": {
               color: "#4d6188 !important",
+              padding: "0 1rem",
+            },
+            " .MuiDataGrid-columnHeader--sortable": {
+              width: "12rem !important",
+              maxWidth: "12rem !important",
+              minWidth: "6px !important",
+              maxHeight: "90px !important",
             },
             ".MuiDataGrid-cell": {
-              width: "8rem",
-              maxHeight: "90px",
+              width: "12rem",
+              maxWidth: "12rem !important",
+              minWidth: "6px !important",
+              maxHeight: "90px !important",
               height: "90px",
+              padding: "0 1.2rem",
+              overflowX: "scroll !important",
+              overflowY: "hidden",
             },
             "& .MuiSelect-select , & .MuiTablePagination-select , & .MuiSelect-standard MuiInputBase-input css-194a1fa-MuiSelect-select-MuiInputBase-input":
               {
                 color: "#4d6188 !important",
               },
+            ".MuiDataGrid-cell--withRenderer .MuiDataGrid-cell ": {
+              minWidth: "6rem",
+              width: "6rem",
+            },
+            "& .MuiDataGrid-scrollbar": {
+              // Style the scrollbar track
+              width: "8px",
+            },
+            "& .MuiDataGrid-scrollbarThumb": {
+              // Style the scrollbar thumb
+              backgroundColor: "#ccc",
+              borderRadius: "4px",
+            },
           }}
         />
       </Box>

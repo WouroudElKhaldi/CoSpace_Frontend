@@ -1,4 +1,4 @@
-import DashLayout from "@/components/dashLayout/dashLayout";
+import DashLayout from "@/components/(dashboard)/dashLayout/dashLayout";
 
 export const metadata = {
   title: "CoSpace - Dashboard",
@@ -6,5 +6,9 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-  return <DashLayout role={["Admin"]}>{children}</DashLayout>;
+  return (
+    <DashLayout admin={true} role={["Admin"]}>
+      {children}
+    </DashLayout>
+  );
 }

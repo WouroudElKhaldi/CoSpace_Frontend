@@ -26,7 +26,7 @@ export default function SignUpComp() {
   const [error, setError] = useState(false);
   const [passwordValid, setPasswordValid] = useState(true);
   const [emailValid, setEmailValid] = useState(true);
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -76,7 +76,6 @@ export default function SignUpComp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("trying to login");
     // Validate email and password before submitting
     const isEmailValid = validateEmail(formData.email);
     const isPasswordValid = validatePassword(formData.password);

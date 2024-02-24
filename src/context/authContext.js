@@ -7,7 +7,7 @@ import { Logout } from "@/fetchData/auth";
 export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [checkUser, setCheckUser] = useState(false);
+  const [checkUser, setCheckUser] = useState(true);
   const [userUpdated, setUserUpdated] = useState(false);
 
   useEffect(() => {
