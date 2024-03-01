@@ -37,7 +37,7 @@ const RatingDash = () => {
     } else if (user && user.role === "Manager") {
       getRatingsByManagerId();
     }
-  }, [success]);
+  }, [success, setRatingData, user]);
   return (
     <Box>
       <div className={styles.h1_container}>

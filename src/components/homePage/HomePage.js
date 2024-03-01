@@ -80,7 +80,7 @@ export default function HomePage() {
         }, 40);
         return () => clearTimeout(timeout);
       }
-    }, [isVisible, count, value, isVisible]);
+    }, [count, value]);
 
     return <span className={styles.map_info_num}>{count}+</span>;
   };

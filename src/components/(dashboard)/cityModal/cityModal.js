@@ -27,7 +27,7 @@ const CityModal = ({
     if (type === "edit") {
       setCity(selectedRowData && selectedRowData.city);
     }
-  }, [selectedRowData]);
+  }, [selectedRowData, type]);
 
   // error validsation
   const validateFormData = () => {

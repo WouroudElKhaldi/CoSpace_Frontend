@@ -52,7 +52,7 @@ const SpacesDash = () => {
 
       fetchSpacesByUser();
     }
-  }, [succesDelete]);
+  }, [succesDelete, setSpacesData, user]);
   return (
     <Box>
       <div className={styles.h1_container}>

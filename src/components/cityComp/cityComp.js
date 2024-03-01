@@ -10,6 +10,7 @@ export function CityComp({ data }) {
   const [isScrollingUp, setIsScrollingUp] = useState(false);
 
   useEffect(() => {
+    const varRef = cardRef.current;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -25,8 +26,8 @@ export function CityComp({ data }) {
     }
 
     return () => {
-      if (cardRef.current) {
-        observer.unobserve(cardRef.current);
+      if (varRef) {
+        observer.unobserve(varRef);
       }
     };
   }, [controls]);

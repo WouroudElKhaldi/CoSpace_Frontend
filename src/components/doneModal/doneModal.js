@@ -36,12 +36,6 @@ const DoneModal = ({ type, message, open, handleClose }) => {
     padding: 0,
   };
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     handleClose();
-  //   }, 10000);
-  // }, [open]);
-
   return (
     <main>
       {open && (

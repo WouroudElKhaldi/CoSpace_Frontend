@@ -34,42 +34,40 @@ export default function SpacesPage() {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedAmenities, setSelectedAmenities] = useState([]);
 
-  const fetchSpaceData = async () => {
-    setLoading(true);
-    const res = await getAllSpaces();
-    setSpacesData(res.data);
-    setLoading(true);
-  };
-
-  const fetchAmenityData = async () => {
-    setLoading(true);
-    const res = await getAmenities();
-    setAmenitiesData(res);
-    setLoading(true);
-  };
-
-  const fetchCategoryData = async () => {
-    setLoading(true);
-    const res = await getCategories();
-    setCategoryData(res);
-    setLoading(true);
-  };
-
   useEffect(() => {
+    const fetchSpaceData = async () => {
+      setLoading(true);
+      const res = await getAllSpaces();
+      setSpacesData(res.data);
+      setLoading(true);
+    };
+
+    const fetchAmenityData = async () => {
+      setLoading(true);
+      const res = await getAmenities();
+      setAmenitiesData(res);
+      setLoading(true);
+    };
+
+    const fetchCategoryData = async () => {
+      setLoading(true);
+      const res = await getCategories();
+      setCategoryData(res);
+      setLoading(true);
+    };
+
     fetchCategoryData();
     fetchAmenityData();
     fetchSpaceData();
-  }, []);
-
-  const filterData = async () => {
-    const res = await filterSpaces({
-      minPrice: minPrice,
-      maxPrice: maxPrice,
-      selectedAmenities: selectedAmenities,
-      selectedCategories: selectedCategories,
-    });
-    // setSpacesData(res);
-  };
+  }, [
+    minPrice,
+    maxPrice,
+    selectedAmenities,
+    selectedCategories,
+    setAmenitiesData,
+    setCategoryData,
+    setSpacesData,
+  ]);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -79,6 +77,15 @@ export default function SpacesPage() {
   };
 
   useEffect(() => {
+    const filterData = async () => {
+      const res = await filterSpaces({
+        minPrice: minPrice,
+        maxPrice: maxPrice,
+        selectedAmenities: selectedAmenities,
+        selectedCategories: selectedCategories,
+      });
+      // setSpacesData(res);
+    };
     // Check if any amenity or category is chosen
     if (selectedAmenities.length > 0 || selectedCategories.length > 0) {
       filterData();

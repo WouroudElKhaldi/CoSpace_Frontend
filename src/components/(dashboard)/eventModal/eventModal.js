@@ -81,7 +81,7 @@ const EventModal = ({
       setSpaces(response.data);
     };
     fetchSpace();
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     if (type === "edit") {
@@ -93,7 +93,7 @@ const EventModal = ({
       setStartDate(selectedRowData && selectedRowData.startDate);
       setEndDate(selectedRowData && selectedRowData.endDate);
     }
-  }, [selectedRowData]);
+  }, [selectedRowData, type]);
 
   const { title, description, spaceId } = formData;
 

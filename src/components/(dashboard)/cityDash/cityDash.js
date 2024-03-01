@@ -27,7 +27,7 @@ const CityDash = () => {
     };
 
     fetchCities();
-  }, [success]);
+  }, [success, setCityData]);
   return (
     <Box>
       <div className={styles.h1_container}>

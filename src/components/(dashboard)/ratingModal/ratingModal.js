@@ -35,7 +35,7 @@ const RatingModal = ({
         message: selectedRowData && selectedRowData.message,
       });
     }
-  }, [selectedRowData]);
+  }, [selectedRowData, type]);
 
   const { rate, message } = formData;
 

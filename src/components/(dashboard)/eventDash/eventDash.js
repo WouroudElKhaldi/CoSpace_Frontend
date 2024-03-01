@@ -27,7 +27,7 @@ const EventDash = () => {
     };
 
     fetchEvents();
-  }, [success]);
+  }, [success, setEventsData]);
   return (
     <Box>
       <div className={styles.h1_container}>

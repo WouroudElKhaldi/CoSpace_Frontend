@@ -42,7 +42,7 @@ const AmenityModal = ({
         image: selectedRowData && selectedRowData.iamge,
       });
     }
-  }, [selectedRowData]);
+  }, [selectedRowData, type]);
 
   const { name, category } = formData;
 

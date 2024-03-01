@@ -29,7 +29,7 @@ const UserDash = () => {
     };
 
     fetchUsers();
-  }, [success]);
+  }, [success, setUserData]);
   return (
     <Box>
       <div className={styles.h1_container}>

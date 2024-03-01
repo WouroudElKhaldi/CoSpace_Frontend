@@ -45,7 +45,7 @@ const RuleModal = ({
         spaceId: selectedRowData && selectedRowData.spaceId,
       });
     }
-  }, [selectedRowData]);
+  }, [selectedRowData, type]);
 
   useEffect(() => {
     const fetchSpaces = async () => {
@@ -62,7 +62,7 @@ const RuleModal = ({
     } else if (user && user.role === "Manager") {
       fetchSpaces();
     }
-  }, []);
+  }, [user]);
 
   const { name, spaceId } = formData;
 
