@@ -44,6 +44,9 @@ export default function DashLayout({ children, role, admin }) {
 
   useEffect(() => {
     const handleResize = () => {
+      if (typeof window === undefined) {
+        setScreenWidth(0);
+      }
       setScreenWidth(window.innerWidth);
     };
 
