@@ -30,3 +30,7 @@
 .button:hover {
   background-color: var(--color-blue-hover);
 }
+
+.button.amenity {
+  width: 150px;
+}

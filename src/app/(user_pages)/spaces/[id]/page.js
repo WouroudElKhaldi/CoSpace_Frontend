@@ -1,7 +1,9 @@
+import SingleSpace from "@/components/singleSpace/singleSpace";
+
 export default function page({ params }) {
   return (
     <div>
-      <p>{params.id}</p>
+      <SingleSpace id={params.id} />
     </div>
   );
 }

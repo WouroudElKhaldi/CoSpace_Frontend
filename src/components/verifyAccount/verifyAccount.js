@@ -6,6 +6,7 @@ import { Box, TextField, Link } from "@mui/material";
 import { VerifyFunction } from "@/fetchData/auth";
 import { AuthContext } from "@/context/authContext";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 const VerifyComp = () => {
   const [formData, setFormData] = useState({
@@ -101,30 +102,49 @@ const VerifyComp = () => {
   };
 
   return (
-    <main className={styles.main}>
-      <Box
+    <Box
+      variant="main"
+      component={"main"}
+      className={styles.main}
+      sx={{
+        "& .Mui-focused > .MuiOutlinedInput-notchedOutline ": {
+          border: "2px solid #d28d48 !important",
+          borderRadius: "4px",
+          bgcolor: "transparent !important",
+        },
+        "& .MuiOutlinedInput-notchedOutline": {
+          border: "2px solid #ededf5 ",
+          color: "white",
+        },
+        "& .MuiInputLabel-root.Mui-focused ": {
+          color: "#d28d48",
+          fontSize: "1.1rem",
+          fontWeight: "500",
+        },
+        "& .MuiSvgIcon-root": {
+          color: "#ededf5",
+        },
+        "& .MuiFormControl-root > label": {
+          color: "#ededf5",
+          fontWeight: 550,
+        },
+        ".MuiFormHelperText-root.Mui-error": {
+          color: "#8B0000",
+        },
+        "& .Mui-error > fieldset ": {
+          border: "2px solid #8B0000 !important",
+        },
+        ".MuiInputBase-input.MuiOutlinedInput-input": {
+          color: "white",
+        },
+      }}
+    >
+      <motion.Box
+        initial={{ opacity: 0, x: "-100vw" }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: "100vw" }}
+        transition={{ duration: 0.5 }}
         className={styles.content__wrapper}
-        sx={{
-          "& .Mui-focused > .MuiOutlinedInput-notchedOutline ": {
-            border: "2px solid #d28d48 !important",
-            borderRadius: "4px",
-            bgcolor: "transparent !important",
-          },
-          "& .MuiOutlinedInput-notchedOutline": {
-            border: "2px solid #ededf5 ",
-          },
-          "& .MuiInputLabel-root.Mui-focused ": {
-            color: "#d28d48",
-            fontSize: "1.1rem",
-            fontWeight: "500",
-          },
-          "& .MuiSvgIcon-root": {
-            color: "#ededf5",
-          },
-          "& .MuiInputLabel-root": {
-            color: "#ededf5",
-          },
-        }}
       >
         <div className={styles.content}>
           <div className={styles.info}>
@@ -199,8 +219,8 @@ const VerifyComp = () => {
             />
           </form>
         </div>
-      </Box>
-    </main>
+      </motion.Box>
+    </Box>
   );
 };
 

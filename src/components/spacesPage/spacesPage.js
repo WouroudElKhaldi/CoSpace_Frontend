@@ -18,6 +18,8 @@ import useAmenityStore from "@/zustand/amenitiesStore";
 import { getCategories } from "@/fetchData/categories";
 import useCategoryStore from "@/zustand/categoryStore";
 import { Box } from "@mui/material";
+import Image from "next/image";
+import Loading from "../loading/loading";
 
 export default function SpacesPage() {
   const { spacesData, setSpacesData } = useSpaceStore();
@@ -26,34 +28,31 @@ export default function SpacesPage() {
 
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(1000);
-  const [formData, setFormData] = useState({
-    criteria: "",
-    search: "",
-  });
+  const [data, setData] = useState("");
+  const [searched, setSearched] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedAmenities, setSelectedAmenities] = useState([]);
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
-
   const fetchSpaceData = async () => {
+    setLoading(true);
     const res = await getAllSpaces();
-    setSpacesData(res);
+    setSpacesData(res.data);
+    setLoading(true);
   };
 
   const fetchAmenityData = async () => {
+    setLoading(true);
     const res = await getAmenities();
     setAmenitiesData(res);
+    setLoading(true);
   };
 
   const fetchCategoryData = async () => {
+    setLoading(true);
     const res = await getCategories();
     setCategoryData(res);
+    setLoading(true);
   };
 
   useEffect(() => {
@@ -74,9 +73,9 @@ export default function SpacesPage() {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    const { criteria, search } = formData;
-    const res = await searchSpace({ criteria, search });
-    setSpacesData(res);
+    const res = await searchSpace({ data });
+    setSpacesData(res.data);
+    setSearched(true);
   };
 
   useEffect(() => {
@@ -358,68 +357,48 @@ export default function SpacesPage() {
               placeholder="Search"
               name="search"
               id="search"
-              value={formData.search}
-              onChange={handleChange}
+              value={data}
+              onChange={(e) => setData(e.target.value)}
             />
-            <select
-              name="criteria"
-              id="criteria"
-              onChange={handleChange}
-              className={styles.select}
-              value={formData.criteria}
-            >
-              <option className={styles.option} value="name" disabled selected>
-                By
-              </option>
-              <option className={styles.option} value="name">
-                Name
-              </option>
-              <option className={styles.option} value="cityName">
-                City
-              </option>
-            </select>
+            <input
+              className={`${styles.button} ${styles.submit}`}
+              type="submit"
+              value={"Search"}
+            />
           </form>
-          {/* <FormControl className={styles.button}>
-            <InputLabel id="demo-simple-select-label">By</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="By"
-              name="criteria"
-              onChange={handleChange}
-            >
-              <MenuItem value={"name"}>Name</MenuItem>
-              <MenuItem value={"cityName"}>City</MenuItem>
-            </Select>
-          </FormControl> */}
           <span
-            className={styles.clear}
+            className={`${styles.button} ${styles.clear}`}
             onClick={() => {
-              setFormData({
-                criteria: "",
-                search: "",
-              });
+              setData("");
               fetchSpaceData();
+              setSearched(false);
             }}
           >
             Clear
           </span>
         </span>
-        <p>
-          {spacesData.length}{" "}
-          {formData === null
-            ? "Results for all spaces"
-            : formData.criteria === "name"
-            ? `Results for spaces with name : ${formData.search}`
-            : formData.criteria === "name"
-            ? `Results for spaces in city : ${formData.search}`
-            : "Results for all spaces"}
-        </p>
+        {searched === true && (
+          <p>
+            {spacesData.length} Results for {`'${data}'`}
+          </p>
+        )}
         <div className={styles.card__Container}>
-          {spacesData.map((space, index) => (
-            <SpaceCard key={index} data={space} />
-          ))}
+          {loading ? (
+            <Loading height={"50vh"} width={"70vh"} />
+          ) : (
+            <>
+              {spacesData.map((space, index) => (
+                <SpaceCard key={index} data={space} />
+              ))}
+            </>
+          )}
         </div>
+        {!loading && spacesData.length === 0 && (
+          <div className={styles.noResult}>
+            <Image src="/search.png" width={300} height={300} alt="no result" />
+            <p>No spaces found!!</p>
+          </div>
+        )}
       </Box>
     </section>
   );

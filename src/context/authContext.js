@@ -3,9 +3,11 @@
 import { useState, useEffect, createContext } from "react";
 import axiosInstance from "../utils/axiosInstance";
 import { Logout } from "@/fetchData/auth";
+import useAlertStore from "@/zustand/alertStore";
 
 export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
+  const { alertData, setAlertData } = useAlertStore();
   const [user, setUser] = useState(null);
   const [checkUser, setCheckUser] = useState(true);
   const [userUpdated, setUserUpdated] = useState(false);
@@ -31,6 +33,10 @@ export const AuthProvider = ({ children }) => {
   const LogOut = () => {
     Logout();
     setUser(null);
+    setAlertData({
+      type: "success",
+      message: "Logged  out  successfully 😁 !",
+    });
   };
 
   return (

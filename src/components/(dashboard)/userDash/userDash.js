@@ -9,27 +9,18 @@ import styles from "../spacesDash/spaceDash.module.css";
 import { AuthContext } from "@/context/authContext";
 import UserModal from "../userModal/userModal";
 import { getAllUsers } from "@/fetchData/users";
+import useAlertStore from "@/zustand/alertStore";
 
 const UserDash = () => {
   const { user } = useContext(AuthContext);
   const { userData, setUserData } = useUserStore();
-  const [openNote, setOpenNote] = useState({
-    open: false,
-    status: "",
-    message: "",
-  });
+  const { alertData } = useAlertStore();
+  const [openNote, setOpenNote] = useState(false);
   const [selectedRowData, setSelectedRowData] = useState({});
   const [success, setSuccess] = useState({});
   const [openAdd, setOpenAdd] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
-  const handleCloseNote = () => {
-    setOpenNote({
-      open: false,
-      status: "",
-      message: "",
-    });
-  };
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -56,15 +47,14 @@ const UserDash = () => {
         setSelectedRowData={setSelectedRowData}
       />
       <DoneModal
-        type={openNote.status}
-        message={openNote.message}
-        open={openNote.open}
-        handleClose={handleCloseNote}
+        type={alertData.type}
+        message={alertData.message}
+        open={openNote}
+        handleClose={() => setOpenNote(false)}
       />
       <UserModal
         type="add"
         open={openAdd}
-        selectedRowData={selectedRowData}
         handleClose={() => setOpenAdd(false)}
         setOpenNote={setOpenNote}
         setSuccess={setSuccess}
@@ -72,7 +62,7 @@ const UserDash = () => {
       <UserModal
         type="edit"
         open={openEdit}
-        selectedRowData={selectedRowData}
+        selectedRowData={selectedRowData && selectedRowData}
         handleClose={() => setOpenEdit(false)}
         setOpenNote={setOpenNote}
         setSuccess={setSuccess}
@@ -80,7 +70,7 @@ const UserDash = () => {
       <DeleteUSerModal
         openDelete={openDelete}
         handleClose={() => setOpenDelete(false)}
-        selectedRowData={selectedRowData}
+        selectedRowData={selectedRowData && selectedRowData}
         setOpenNote={setOpenNote}
         setSuccessDelete={setSuccess}
       />

@@ -19,43 +19,71 @@ export const getOneUser = async ({ id }) => {
 };
 
 export const deleteUser = async ({ id }) => {
-  const response = await axiosInstance.delete("user", {
-    data: {
-      id: id,
-    },
-  });
-
-  if (response.status !== 200) {
-    throw new Error(`Failed to delete user with the id of ${id}`);
+  try {
+    const response = await axiosInstance.delete("user", {
+      data: {
+        id: id,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    return { errorMessage: error.response.data, status: error.response.status };
   }
-  return response.data;
 };
 
-export const addUser = async ({ data }) => {
-  const res = await axiosInstance.post("user", {
-    data: {
-      ...data,
-    },
-  });
-
-  if (res.status !== 200) {
-    throw new Error(`Failed to add user`);
+export const addUser = async ({
+  role,
+  fullName,
+  email,
+  password,
+  phoneNumber,
+  image,
+  status,
+}) => {
+  try {
+    const res = await axiosInstance.post("user", {
+      role,
+      fullName,
+      email,
+      password,
+      phoneNumber,
+      image,
+      status,
+    });
+    if (res) {
+      return res;
+    }
+  } catch (error) {
+    return { errorMessage: error.response.data, status: error.response.status };
   }
-
-  return res.data;
 };
 
 export const editUser = async ({ id, data }) => {
-  const res = await axiosInstance.patch("user", {
-    data: {
+  const {
+    role,
+    fullName,
+    email,
+    password,
+    phoneNumber,
+    image,
+    checkPassword,
+    status,
+  } = data;
+  try {
+    const res = await axiosInstance.patch("user", {
       id: id,
-      ...data,
-    },
-  });
-
-  if (res.status !== 200) {
-    throw new Error(`Failed to update user with the id of ${id}`);
+      role,
+      fullName,
+      email,
+      password,
+      phoneNumber,
+      image,
+      checkPassword,
+      admin: true,
+      status,
+    });
+    return res;
+  } catch (error) {
+    return { errorMessage: error.response.data, status: error.response.status };
   }
-
-  return res.data;
 };

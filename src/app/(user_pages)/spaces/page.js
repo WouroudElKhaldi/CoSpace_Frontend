@@ -8,9 +8,7 @@ export default async function Spaces() {
         <div className={styles.img}></div> {/* Background container */}
         <div className={styles.content}>
           <div className={styles.slogan__container}>
-            <p className={styles.slogan}>
-              Coworking spaces designed for you to
-            </p>
+            <p className={styles.slogan}>Coworking spaces designed for you</p>
           </div>
         </div>
       </section>

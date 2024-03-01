@@ -1,7 +1,9 @@
+import AmenityDash from "@/components/(dashboard)/amenitiesDash/amenityDash";
+
 export default function Page(props) {
   return (
     <>
-      <p>Amenity dash</p>
+      <AmenityDash />
     </>
   );
 }

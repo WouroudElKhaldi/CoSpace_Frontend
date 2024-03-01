@@ -8,9 +8,11 @@ import DoneModal from "../../doneModal/doneModal";
 import DeleteSpaceModal from "../spaceModal/DeleteSpaceModal";
 import styles from "./spaceDash.module.css";
 import { AuthContext } from "@/context/authContext";
+import { useRouter } from "next/navigation";
 
 const SpacesDash = () => {
   const { user } = useContext(AuthContext);
+  const router = useRouter();
   const { spacesData, setSpacesData } = useSpaceStore();
   const [openNote, setOpenNote] = useState({
     open: false,
@@ -40,7 +42,7 @@ const SpacesDash = () => {
     if (user && user.role === "Admin") {
       const fetchSpaces = async () => {
         const res = await getAllSpaces();
-        setSpacesData(res);
+        setSpacesData(res.data);
       };
       fetchSpaces();
     } else if (user && user.role === "Manager") {
@@ -57,14 +59,9 @@ const SpacesDash = () => {
         <h1 className={styles.h1}>Manage Spaces</h1>
         <button
           className={styles.button}
-          onClick={() =>
-            handleOpenNote({
-              status: "success",
-              message: "note opened successfuly",
-            })
-          }
+          onClick={() => router.push("/dashboard/add-space")}
         >
-          Open Note
+          Add Space
         </button>
       </div>
       <Table

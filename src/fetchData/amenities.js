@@ -1,4 +1,5 @@
 import axiosInstance from "@/utils/axiosInstance";
+import axios from "axios";
 
 export const getAmenities = async () => {
   const res = await axiosInstance.get("amenities");
@@ -8,4 +9,63 @@ export const getAmenities = async () => {
   }
 
   return res.data;
+};
+
+export const deleteAmenity = async ({ id }) => {
+  try {
+    const response = await axiosInstance.delete("amenities", {
+      data: {
+        id: id,
+      },
+    });
+    return response;
+  } catch (error) {
+    return { errorMessage: error.response.data, status: error.response.status };
+  }
+};
+
+export const addAmenity = async ({ name, category, image }) => {
+  try {
+    const res = await axios.post(
+      "http://localhost:2004/amenities",
+      {
+        name,
+        category,
+        image,
+      },
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    if (res) {
+      return res;
+    }
+  } catch (error) {
+    return { errorMessage: error.response.data, status: error.response.status };
+  }
+};
+
+export const editAmenity = async ({ id, data }) => {
+  const { name, category, image } = data;
+  try {
+    const res = await axios.patch(
+      "http://localhost:2004/amenities",
+      {
+        id: id,
+        name,
+        category,
+        image,
+      },
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return res;
+  } catch (error) {
+    return { errorMessage: error.response.data, status: error.response.status };
+  }
 };

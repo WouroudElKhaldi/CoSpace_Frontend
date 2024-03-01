@@ -76,19 +76,19 @@
   width: 38px;
   padding: 10px;
   border-radius: 50%;
-  background: var(--color-brown);
+  background: var(--color-brown) !important;
   font-weight: bold;
   font-size: 15px;
   transition: 0.1s;
   border: none;
   outline: none;
   cursor: pointer;
-  color: var(--color-offWhite);
+  color: var(--color-offWhite) !important;
 }
 
 .logout:hover {
-  background-color: var(--color-offWhite);
-  color: var(--color-brown);
+  background-color: var(--color-offWhite) !important;
+  color: var(--color-brown) !important;
   opacity: 0.9;
 }
 

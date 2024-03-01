@@ -16,14 +16,21 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import OAuth from "../oAuth/oAuth";
 import { SignupFunction } from "@/fetchData/auth";
 import { useRouter } from "next/navigation";
+import { LoadingButton } from "@mui/lab";
+import useAlertStore from "@/zustand/alertStore";
+import DoneModal from "../doneModal/doneModal";
+import { motion } from "framer-motion";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const PASSWORD_REGEX =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&^])[A-Za-z\d@.#$!%*?&]{8,15}$/;
 
 export default function SignUpComp() {
+  const { alertData, setAlertData } = useAlertStore();
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [openNote, setOpenNote] = useState(false);
   const [passwordValid, setPasswordValid] = useState(true);
   const [emailValid, setEmailValid] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -62,8 +69,6 @@ export default function SignUpComp() {
     event.preventDefault();
   };
 
-  ////
-
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevFormData) => ({
@@ -76,59 +81,91 @@ export default function SignUpComp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     // Validate email and password before submitting
     const isEmailValid = validateEmail(formData.email);
     const isPasswordValid = validatePassword(formData.password);
 
     if (!isEmailValid) {
       setEmailValid(false);
+      setLoading(false);
     }
     if (!isPasswordValid) {
       setPasswordValid(false);
+      setLoading(false);
     }
 
     if (isEmailValid && isPasswordValid) {
       const res = await SignupFunction(formData);
       if (res.status !== 200) {
-        setError(true);
+        if (res.errorMessage === "All fields are required") {
+          setAlertData({
+            message: `All fields are required 😔!`,
+            type: "error",
+          });
+        } else if (res.errorMessage === "Email already exists") {
+          setAlertData({
+            message: `Email already exists 😔!`,
+            type: "error",
+          });
+        }
+        setOpenNote(true);
+        setLoading(false);
       } else {
         router.push("/verify");
+        setAlertData({
+          message: "Signed up successfuly 😁 !",
+          type: "success",
+        });
+        setLoading(false);
       }
     }
   };
 
   return (
-    <main className={`${styles.main} ${styles.sign_main}`}>
-      <Box
-        className={styles.content__wrapper}
-        sx={{
-          "& .Mui-focused > .MuiOutlinedInput-notchedOutline ": {
-            border: "2px solid #d28d48 !important",
-            borderRadius: "4px",
-            bgcolor: "transparent !important",
-          },
-          "& .MuiOutlinedInput-notchedOutline": {
-            border: "2px solid #ededf5 ",
-            color: "white",
-          },
-          "& .MuiInputLabel-root.Mui-focused ": {
-            color: "#d28d48",
-            fontSize: "1.1rem",
-            fontWeight: "500",
-          },
-          "& .MuiSvgIcon-root": {
-            color: "#ededf5",
-          },
-          "& .MuiFormControl-root > label": {
-            color: "#ededf5",
-          },
-          ".MuiFormHelperText-root.Mui-error": {
-            color: "#8B0000",
-          },
-          "& .Mui-error > fieldset ": {
-            border: "2px solid #8B0000 !important",
-          },
-        }}
+    <Box
+      variant="main"
+      component={"main"}
+      className={`${styles.main} ${styles.sign_main}`}
+      sx={{
+        "& .Mui-focused > .MuiOutlinedInput-notchedOutline ": {
+          border: "2px solid #d28d48 !important",
+          borderRadius: "4px",
+          bgcolor: "transparent !important",
+        },
+        "& .MuiOutlinedInput-notchedOutline": {
+          border: "2px solid #ededf5 ",
+          color: "white",
+        },
+        "& .MuiInputLabel-root.Mui-focused ": {
+          color: "#d28d48",
+          fontSize: "1.1rem",
+          fontWeight: "500",
+        },
+        "& .MuiSvgIcon-root": {
+          color: "#ededf5",
+        },
+        "& .MuiFormControl-root > label": {
+          color: "#ededf5",
+          fontWeight: 550,
+        },
+        ".MuiFormHelperText-root.Mui-error": {
+          color: "#8B0000",
+        },
+        "& .Mui-error > fieldset ": {
+          border: "2px solid #8B0000 !important",
+        },
+        ".MuiInputBase-input.MuiOutlinedInput-input": {
+          color: "white",
+        },
+      }}
+    >
+      <motion.Box
+        initial={{ opacity: 0, x: "-100vw" }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: "100vw" }}
+        transition={{ duration: 0.5 }}
+        className={`${styles.content__wrapper} ${styles.sign}`}
       >
         <div className={styles.content}>
           <div className={styles.info}>
@@ -154,7 +191,7 @@ export default function SignUpComp() {
           >
             <TextField
               fullWidth
-              id="filled-basic"
+              id="filled-basic1"
               label="FullName"
               variant="outlined"
               name="fullName"
@@ -165,7 +202,7 @@ export default function SignUpComp() {
             />
             <TextField
               fullWidth
-              id="filled-basic"
+              id="filled-basic2"
               label="Email"
               variant="outlined"
               name="email"
@@ -221,24 +258,34 @@ export default function SignUpComp() {
                 </p>
               )}
             </span>
-            <input
-              type="submit"
-              value={"Sign up"}
-              className={`${styles.submit__button} ${
-                formValidation === false ? styles.disabled : ""
-              }`}
-              disabled={formValidation === false}
-            />
+            {loading ? (
+              <LoadingButton>Loading ...</LoadingButton>
+            ) : (
+              <input
+                type="submit"
+                value={"Sign up"}
+                className={`${styles.submit__button} ${
+                  formValidation === false ? styles.disabled : ""
+                }`}
+                disabled={formValidation === false}
+              />
+            )}
             <div className={styles.or__hr}>
               <hr />
               <span className={styles.or__wrapper}>or</span>
             </div>
             <div className={styles.oauth}>
-              <OAuth />
+              <OAuth isLogin={false} />
             </div>
           </form>
         </div>
-      </Box>
-    </main>
+      </motion.Box>
+      <DoneModal
+        type={alertData.type}
+        message={alertData.message}
+        open={openNote}
+        handleClose={() => setOpenNote(false)}
+      />
+    </Box>
   );
 }

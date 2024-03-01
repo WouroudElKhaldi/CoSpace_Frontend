@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "@mui/material/Modal";
 import {
   Box,
@@ -8,16 +8,17 @@ import {
   IconButton,
   InputAdornment,
   InputLabel,
+  MenuItem,
   OutlinedInput,
+  Select,
   TextField,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import DeleteIcon from "@mui/icons-material/Delete";
-import styles from "../../login/login.module.css";
+import styles from "./userModal.module.css";
 import { Typography } from "@mui/material";
-import Button from "@mui/material/Button";
 import { addUser, editUser } from "@/fetchData/users";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import useAlertStore from "@/zustand/alertStore";
 
 const UserModal = ({
   type,
@@ -41,36 +42,21 @@ const UserModal = ({
   const [emailValid, setEmailValid] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { setAlertData } = useAlertStore();
 
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: "20rem",
-    bgcolor: "white",
-    boxShadow: 24,
-    p: 4,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    rowGap: "1.5rem",
-  };
-
-  const divStyle = {
-    display: "flex",
-    justifyContent: "space-between",
-    width: "16rem",
-    paddingBottom: "1rem",
-  };
-
-  const span = {
-    display: "flex",
-    alignItems: "center",
-    color: "##4d6188",
-    padding: 0,
-  };
+  useEffect(() => {
+    if (type === "edit") {
+      setFormData({
+        fullName: selectedRowData && selectedRowData.fullName,
+        role: selectedRowData && selectedRowData.role,
+        email: selectedRowData && selectedRowData.email,
+        password: "",
+        phoneNumber: selectedRowData && selectedRowData.phoneNumber,
+        status: selectedRowData && selectedRowData.status,
+        image: selectedRowData && selectedRowData.iamge,
+      });
+    }
+  }, [selectedRowData]);
 
   const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const PASSWORD_REGEX =
@@ -81,7 +67,7 @@ const UserModal = ({
 
   // error validsation
   const validateFormData = () => {
-    if (!fullName || !email || !password || !phoneNumber || !role || !status) {
+    if (!fullName || !email || !phoneNumber || !role || !status) {
       return false;
     } else {
       return true;
@@ -122,39 +108,98 @@ const UserModal = ({
 
     // Validate email and password before submitting
     const isEmailValid = validateEmail(formData.email);
-    const isPasswordValid = validatePassword(formData.password);
 
+    // If password is provided, validate it; otherwise, consider it valid
+    const isPasswordValid =
+      type === "add"
+        ? validatePassword(formData.password)
+        : type === "edit" && formData.password
+        ? validatePassword(formData.password)
+        : true;
     if (!isEmailValid) {
       setEmailValid(false);
+      setLoading(false);
     }
-    if (!isPasswordValid) {
+    if (formData.password && !isPasswordValid) {
       setPasswordValid(false);
+      setLoading(false);
     }
 
     try {
       if (isEmailValid && isPasswordValid) {
         if (type === "add") {
-          const response = await addUser({ formData });
-          setLoading(false);
-          setError(false);
-          setSuccess(response);
-          handleClose();
-          setOpenNote({
-            open: true,
-            status: "success",
-            message: `User ${response.fullName} has been added successfuly `,
+          const res = await addUser({
+            role: formData.role,
+            fullName: formData.fullName,
+            email: formData.email,
+            password: formData.password,
+            phoneNumber: formData.phoneNumber,
+            image: image,
+            status: formData.status,
           });
+          if (res.status !== 200) {
+            if (res.errorMessage === "All fields are required") {
+              setAlertData({
+                message: `All fields are required 😔!`,
+                type: "error",
+              });
+            } else if (res.errorMessage === "Email already exists") {
+              setAlertData({
+                message: `Email already exists 😔!`,
+                type: "error",
+              });
+            }
+            setOpenNote(true);
+            handleClose();
+            setLoading(false);
+            setSuccess(res);
+            return;
+          } else {
+            setLoading(false);
+            setError(false);
+            setSuccess(res);
+            setAlertData({
+              message: `User ${res.data.fullName} has been added successfuly `,
+              type: "success",
+            });
+            setOpenNote(true);
+            handleClose();
+          }
         } else if (type === "edit") {
-          const response = await editUser({ formData });
-          setLoading(false);
-          setError(false);
-          setSuccess(response);
-          handleClose();
-          setOpenNote({
-            open: true,
-            status: "success",
-            message: `User ${formData.fullName} has been edited successfuly `,
+          const res = await editUser({
+            id: selectedRowData._id,
+            data: formData,
           });
+          if (res.status !== 200) {
+            if (res.errorMessage === "All fields are required") {
+              setAlertData({
+                message: `All fields are required 😔!`,
+                type: "error",
+              });
+            } else if (res.errorMessage === "Invalid password") {
+              setAlertData({
+                message: `Invalid password 😔!`,
+                type: "error",
+              });
+            } else if (res.errorMessage === "User not found") {
+              setAlertData({
+                message: `User not found 😔!`,
+                type: "error",
+              });
+            }
+            handleClose();
+            setLoading(false);
+          } else {
+            setLoading(false);
+            setError(false);
+            setSuccess(res);
+            setAlertData({
+              type: "success",
+              message: `User ${selectedRowData.fullName} has been edited successfuly `,
+            });
+            handleClose();
+          }
+          setOpenNote(true);
         }
       }
     } catch (error) {
@@ -170,39 +215,37 @@ const UserModal = ({
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        sx={{
+          "& .Mui-focused > .MuiOutlinedInput-notchedOutline ": {
+            border: "2px solid #d28d48 !important",
+            borderRadius: "4px",
+            bgcolor: "transparent !important",
+          },
+          "& .MuiOutlinedInput-notchedOutline": {
+            border: "2px solid gray ",
+            color: "black",
+          },
+          "& .MuiInputLabel-root.Mui-focused ": {
+            color: "#d28d48",
+            fontSize: "1.1rem",
+            fontWeight: "500",
+          },
+          "& .MuiSvgIcon-root": {
+            color: "gray",
+          },
+          "& .MuiFormControl-root > label": {
+            color: "gray",
+          },
+          ".MuiFormHelperText-root.Mui-error": {
+            color: "#8B0000",
+          },
+          "& .Mui-error > fieldset ": {
+            border: "2px solid #8B0000 !important",
+          },
+        }}
       >
-        <Box sx={style}>
-          <Box
-            style={divStyle}
-            sx={{
-              "& .Mui-focused > .MuiOutlinedInput-notchedOutline ": {
-                border: "2px solid #d28d48 !important",
-                borderRadius: "4px",
-                bgcolor: "transparent !important",
-              },
-              "& .MuiOutlinedInput-notchedOutline": {
-                border: "2px solid #ededf5 ",
-                color: "white",
-              },
-              "& .MuiInputLabel-root.Mui-focused ": {
-                color: "#d28d48",
-                fontSize: "1.1rem",
-                fontWeight: "500",
-              },
-              "& .MuiSvgIcon-root": {
-                color: "#ededf5",
-              },
-              "& .MuiFormControl-root > label": {
-                color: "#ededf5",
-              },
-              ".MuiFormHelperText-root.Mui-error": {
-                color: "#8B0000",
-              },
-              "& .Mui-error > fieldset ": {
-                border: "2px solid #8B0000 !important",
-              },
-            }}
-          >
+        <Box className={styles.modal}>
+          <Box className={styles.div}>
             <Typography
               variant="p"
               component="p"
@@ -214,8 +257,7 @@ const UserModal = ({
               {type === "add" ? "Add User" : "Edit User"}
             </Typography>
             <IconButton
-              style={span}
-              className={styles.Edit}
+              className={styles.span}
               onClick={() => {
                 handleClose();
               }}
@@ -231,7 +273,7 @@ const UserModal = ({
           >
             <TextField
               fullWidth
-              id="filled-basic"
+              id="filled-basic1"
               label="FullName"
               variant="outlined"
               name="fullName"
@@ -239,23 +281,28 @@ const UserModal = ({
                 fontFamily: "Arial !important",
               }}
               onChange={handleChange}
+              value={formData.fullName}
             />
+            <span>
+              <TextField
+                fullWidth
+                id="filled-basic2"
+                label="Email"
+                variant="outlined"
+                name="email"
+                sx={{
+                  fontFamily: "Arial !important",
+                }}
+                value={formData.email}
+                onChange={handleChange}
+                error={!emailValid}
+              />
+              {!emailValid && <p className={styles.error}>Invalid Email</p>}
+            </span>
+
             <TextField
               fullWidth
-              id="filled-basic"
-              label="Email"
-              variant="outlined"
-              name="email"
-              sx={{
-                fontFamily: "Arial !important",
-              }}
-              onChange={handleChange}
-              error={!emailValid}
-              helperText={!emailValid && "Invalid email"}
-            />
-            <TextField
-              fullWidth
-              id="filled-basic"
+              id="filled-basic3"
               label="Phone Number"
               variant="outlined"
               name="phoneNumber"
@@ -263,9 +310,10 @@ const UserModal = ({
                 fontFamily: "Arial !important",
               }}
               onChange={handleChange}
+              value={formData.phoneNumber}
             />
             <span>
-              <FormControl fullWidth variant="outlined" helperText="hii">
+              <FormControl fullWidth variant="outlined">
                 <InputLabel htmlFor="outlined-adornment-password">
                   Password
                 </InputLabel>
@@ -288,7 +336,6 @@ const UserModal = ({
                   name="password"
                   onChange={handleChange}
                   error={!passwordValid}
-                  helperText={"Invalid password"}
                 />
               </FormControl>
               {!passwordValid && (
@@ -298,10 +345,45 @@ const UserModal = ({
                 </p>
               )}
             </span>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label2">Role</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={formData.role}
+                label="Role"
+                name="role"
+                onChange={handleChange}
+              >
+                <MenuItem value={""} disabled>
+                  <i>None</i>
+                </MenuItem>
+                <MenuItem value={"User"}>User</MenuItem>
+                <MenuItem value={"Manager"}>Manager</MenuItem>
+                <MenuItem value={"Admin"}>Admin</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label1">Status</InputLabel>
+              <Select
+                labelId="demo-simple-select-label1"
+                id="demo-simple-select1"
+                value={formData.status}
+                label="Status"
+                name="status"
+                onChange={handleChange}
+              >
+                <MenuItem value={""} disabled>
+                  <i>None</i>
+                </MenuItem>
+                <MenuItem value={"Verified"}>Verified</MenuItem>
+                <MenuItem value={"Pending"}>Pending</MenuItem>
+              </Select>
+            </FormControl>
             <input type="file" name="" id="" />
             <input
               type="submit"
-              value={"Sign up"}
+              value={"Submit"}
               className={`${styles.submit__button} ${
                 formValidation === false ? styles.disabled : ""
               }`}

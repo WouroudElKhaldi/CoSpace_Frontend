@@ -28,15 +28,19 @@ import MapsHomeWorkIcon from "@mui/icons-material/MapsHomeWork";
 import LogoutIcon from "@mui/icons-material/Logout";
 import HomeIcon from "@mui/icons-material/Home";
 import EventIcon from "@mui/icons-material/Event";
+import ApartmentIcon from "@mui/icons-material/Apartment";
+import RateReviewIcon from "@mui/icons-material/RateReview";
+import RuleIcon from "@mui/icons-material/Rule";
 
 import Link from "next/link";
+import Loading from "@/components/loading/loading";
 
 export default function DashLayout({ children, role, admin }) {
   const router = useRouter();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const [screenWidth, setScreenWidth] = useState();
 
   useEffect(() => {
     const handleResize = () => {
@@ -123,17 +127,21 @@ export default function DashLayout({ children, role, admin }) {
 
   if (user && user.role === "Admin") {
     links = [
-      { path: "/", text: "Overview", icon: <DashboardIcon /> },
+      { path: "/overview", text: "Overview", icon: <DashboardIcon /> },
       { path: "/admin/user", text: "Users", icon: <GroupIcon /> },
       { path: "/spaces", text: "Spaces", icon: <MapsHomeWorkIcon /> },
       { path: "/admin/amenity", text: "Amenities", icon: <ChairIcon /> },
       { path: "/event", text: "Events", icon: <EventIcon /> },
-      { path: "/starred", text: "Starred4", icon: <InboxIcon /> },
+      { path: "/admin/city", text: "Cities", icon: <ApartmentIcon /> },
+      { path: "/rating", text: "Ratigs", icon: <RateReviewIcon /> },
+      { path: "/rule", text: "Rules", icon: <RuleIcon /> },
     ];
   } else if (user && user.role === "Manager") {
     links = [
       { path: "/spaces", text: "Spaces", icon: <MapsHomeWorkIcon /> },
       { path: "/event", text: "Events", icon: <EventIcon /> },
+      { path: "/rating", text: "Ratigs", icon: <RateReviewIcon /> },
+      { path: "/rule", text: "Rules", icon: <RuleIcon /> },
       { path: "/subscribed_user", text: "Sub User", icon: <GroupIcon /> },
     ];
   }
@@ -147,19 +155,7 @@ export default function DashLayout({ children, role, admin }) {
   };
 
   if (checkUser) {
-    return (
-      <div
-        style={{
-          height: "100vh",
-          width: "100vw",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        Loading .....
-      </div>
-    );
+    return <Loading />;
   }
 
   if (user && role.includes(user.role)) {
@@ -279,7 +275,7 @@ export default function DashLayout({ children, role, admin }) {
                       display: open ? "flex" : "none",
                     }}
                   >
-                    Home
+                    Log Out
                   </span>
                 </ListItemButton>
               </ListItem>
@@ -293,6 +289,7 @@ export default function DashLayout({ children, role, admin }) {
                       bgcolor: "#4d61886e",
                     },
                   }}
+                  onClick={() => router.push("/")}
                 >
                   <ListItemIcon
                     sx={{

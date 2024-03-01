@@ -1,11 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import styles from "./table.module.css";
+import { useState, useEffect, useContext } from "react";
 import { Avatar, Box, IconButton } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import Grid from "@mui/material/Unstable_Grid2";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { AuthContext } from "@/context/authContext";
 
 const Table = ({
   data,
@@ -15,6 +17,7 @@ const Table = ({
   setSelectedRowData,
   handleOpenDelete,
 }) => {
+  const { user } = useContext(AuthContext);
   const [columns, setColumns] = useState([]);
   const [error, setError] = useState(false);
   const buton = isEdit === true ? true : false;
@@ -43,6 +46,15 @@ const Table = ({
     setSelectedRowData(row);
   };
 
+  const formatDate = (date) => {
+    const options = { year: "numeric", month: "2-digit", day: "2-digit" };
+    const dateObj = new Date(date);
+    const localDate = new Date(
+      dateObj.getTime() + dateObj.getTimezoneOffset() * 60000
+    ); // Adjust for timezone offset
+    return localDate.toLocaleDateString("en-GB", options);
+  };
+
   let visibleFields;
   useEffect(() => {
     try {
@@ -59,30 +71,22 @@ const Table = ({
           "status",
           "image",
         ];
-      } else if (ForWhat === "categories") {
-        visibleFields = ["name", "name_AR"];
-      } else if (ForWhat === "orders") {
+      } else if (ForWhat === "amenities") {
+        visibleFields = ["name", "category", "image"];
+      } else if (ForWhat === "event") {
         visibleFields = [
-          "number",
-          "userId",
-          "products",
-          "totalPrice",
-          "address",
-          "city",
-          "country",
-          "status",
+          "title",
+          "spaceName",
+          "startDate",
+          "endDate",
+          "description",
         ];
-      } else if (ForWhat === "clients") {
-        visibleFields = ["name", "image", "location"];
-      } else if (ForWhat === "blogs") {
-        visibleFields = [
-          "title_en",
-          "title_ar",
-          "description_en",
-          "description_ar",
-          "video",
-          "images",
-        ];
+      } else if (ForWhat === "cities") {
+        visibleFields = ["city"];
+      } else if (ForWhat === "rating") {
+        visibleFields = ["userName", "spaceName", "rate", "message"];
+      } else if (ForWhat === "rules") {
+        visibleFields = ["spaceName", "name", "image"];
       } else {
         visibleFields = Object.keys(data[0]);
       }
@@ -92,104 +96,115 @@ const Table = ({
         headerName: field,
         flex: screenWidth < 1000 ? 0 : 1,
         renderCell: (params) => {
+          if (
+            ForWhat === "amenities" &&
+            field === "image" &&
+            params.row.image
+          ) {
+            return (
+              <div className={styles.image}>
+                <img
+                  src={`http://localhost:2004/images/${
+                    params.row.image ? params.row.image : ""
+                  }`}
+                  alt="Icon"
+                  style={{ width: "80", height: "50px" }}
+                />
+              </div>
+            );
+          }
           if (field === "image" && params.row.image) {
             return (
               <img
-                src={`${process.env.REACT_APP_IMAGE_PATH}/${
+                src={`http://localhost:2004/images/${
                   params.row.image ? params.row.image : ""
-                }`} // Assuming the "icon" field contains the image URL
+                }`}
                 alt="Icon"
-                style={{ width: "140px", height: "100px" }}
+                style={{ width: "100", height: "80px" }}
               />
             );
           }
           if (field === "image" && !params.row.image) {
-            return <Avatar alt={params.row.firstName} />;
-          }
-          if (field === "color" && params.row.color) {
-            const color = params.row.color.hex;
             return (
-              <div
-                style={{
-                  backgroundColor: color,
-                  width: "1.5rem",
-                  height: "1.5rem",
-                  borderRadius: "50%",
-                }}
-              ></div>
+              <div className={styles.avatar}>
+                <Avatar alt={params.row.fullName} />
+              </div>
             );
           }
-          if (field === "price" && params.row.price) {
-            const price = params.row.price;
-            return <div>${price}</div>;
+          if (field === "email" && params.row.email) {
+            return <p className={styles.email}>{params.row.email}</p>;
           }
-
-          if (
-            field === "userId" &&
-            params.row.userId.firstName &&
-            params.row.userId.lastName
-          ) {
-            return (
-              <p
-                style={{
-                  color: "black",
-                }}
-              >
-                {params.row.userId.firstName + " " + params.row.userId.lastName}
-              </p>
-            );
+          if (field === "description" && params.row.description) {
+            return <p className={styles.email}>{params.row.description}</p>;
           }
-
-          if (field === "category" && params.row.category) {
-            return (
-              <p
-                style={{
-                  color: "black",
-                }}
-              >
-                {params.row.category.name}
-              </p>
-            );
+          if (field === "spaceId" && params.row.spaceId) {
+            return <p className={styles.email}>{params.row.spaceId.name}</p>;
+          }
+          if (field === "startDate" && params.row.startDate) {
+            return <div>{formatDate(params.row.startDate)}</div>;
+          }
+          if (field === "endDate" && params.row.endDate) {
+            return <div>{formatDate(params.row.endDate)}</div>;
           }
           return params.value;
         },
       }));
 
       if (buton === true) {
-        updatedColumns.push({
-          field: "actions",
-          headerName: "Actions",
-          renderCell: (params) => (
-            <Grid
-              container
-              md={12}
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                minWidth: "5rem",
-              }}
-            >
-              <IconButton onClick={(e) => handleEdit(e, params.row)}>
-                <EditIcon
-                  sx={{
-                    ":hover": {
-                      color: "red !important",
-                    },
-                  }}
-                />
-              </IconButton>
-              <IconButton onClick={(e) => handleDelete(e, params.row)}>
-                <DeleteIcon
-                  sx={{
-                    ":hover": {
-                      color: "red !important",
-                    },
-                  }}
-                />
-              </IconButton>
-            </Grid>
-          ),
-        });
+        if (ForWhat === "rating" && user && user.role === "Manager") {
+          updatedColumns.push({
+            field: "delete",
+            headerName: "Delete",
+            renderCell: (params) => (
+              <div className={styles.icon}>
+                <IconButton onClick={(e) => handleDelete(e, params.row)}>
+                  <DeleteIcon
+                    sx={{
+                      ":hover": {
+                        color: "red !important",
+                      },
+                    }}
+                  />
+                </IconButton>
+              </div>
+            ),
+          });
+        } else {
+          updatedColumns.push({
+            field: "actions",
+            headerName: "Actions",
+            renderCell: (params) => (
+              <Grid
+                container
+                md={12}
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  minWidth: "5rem",
+                }}
+              >
+                <IconButton onClick={(e) => handleEdit(e, params.row)}>
+                  <EditIcon
+                    sx={{
+                      ":hover": {
+                        color: "red !important",
+                      },
+                    }}
+                  />
+                </IconButton>
+                <IconButton onClick={(e) => handleDelete(e, params.row)}>
+                  <DeleteIcon
+                    sx={{
+                      ":hover": {
+                        color: "red !important",
+                      },
+                    }}
+                  />
+                </IconButton>
+              </Grid>
+            ),
+          });
+        }
       }
 
       setColumns(updatedColumns);
@@ -210,6 +225,7 @@ const Table = ({
         }}
       >
         <DataGrid
+          className={styles.scroll}
           showCellVerticalBorder
           showColumnVerticalBorder
           isCellEditable={(GridCellParams) => false}
@@ -309,8 +325,7 @@ const Table = ({
               maxHeight: "90px !important",
               height: "90px",
               padding: "0 1.2rem",
-              overflowX: "scroll !important",
-              overflowY: "hidden",
+              overflow: "hidden",
             },
             "& .MuiSelect-select , & .MuiTablePagination-select , & .MuiSelect-standard MuiInputBase-input css-194a1fa-MuiSelect-select-MuiInputBase-input":
               {
@@ -323,6 +338,7 @@ const Table = ({
             "& .MuiDataGrid-scrollbar": {
               // Style the scrollbar track
               width: "8px",
+              bgcolor: "black",
             },
             "& .MuiDataGrid-scrollbarThumb": {
               // Style the scrollbar thumb

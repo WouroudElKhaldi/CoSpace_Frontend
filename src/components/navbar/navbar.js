@@ -11,6 +11,7 @@ import { usePathname } from "next/navigation";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { IconButton } from "@mui/material";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function Navbar() {
   const router = useRouter();
@@ -45,7 +46,12 @@ export default function Navbar() {
       <div className={styles.navbar}>
         <Link href="/">
           <div>
-            <p>CoSpace</p>
+            <Image
+              src={isDarkFont ? "/logo2.svg" : "/logo.svg"}
+              width={100}
+              height={100}
+              alt="Co-Space Logo"
+            />
           </div>
         </Link>
         <div className={styles.whatever}>
@@ -81,6 +87,7 @@ export default function Navbar() {
                       "/contactus",
                       "/aboutus",
                       "/events",
+                      "/forgot-password",
                     ].includes(pathname)
                       ? styles.white
                       : styles.black
@@ -103,6 +110,7 @@ export default function Navbar() {
                       "/contactus",
                       "/aboutus",
                       "/events",
+                      "/forgot-password",
                     ].includes(pathname)
                       ? styles.white
                       : styles.black
@@ -127,6 +135,7 @@ export default function Navbar() {
                       "/contactus",
                       "/aboutus",
                       "/events",
+                      "/forgot-password",
                     ].includes(pathname)
                       ? styles.white
                       : styles.black
@@ -153,6 +162,7 @@ export default function Navbar() {
                       "/contactus",
                       "/aboutus",
                       "/events",
+                      "/forgot-password",
                     ].includes(pathname)
                       ? styles.white
                       : styles.black
@@ -181,6 +191,7 @@ export default function Navbar() {
                       "/contactus",
                       "/aboutus",
                       "/events",
+                      "/forgot-password",
                     ].includes(pathname)
                       ? styles.white
                       : styles.black
@@ -198,7 +209,7 @@ export default function Navbar() {
                   <>
                     <li>
                       <Link
-                        href="/dashboard"
+                        href="/dashboard/overview"
                         activeclassname={styles.activeLink}
                         className={`${styles.menuItem} ${
                           [
@@ -209,6 +220,7 @@ export default function Navbar() {
                             "/contactus",
                             "/aboutus",
                             "/events",
+                            "/forgot-password",
                           ].includes(pathname)
                             ? styles.white
                             : styles.black
@@ -248,6 +260,7 @@ export default function Navbar() {
                             "/dashboard/Manager",
                             "/aboutus",
                             "/events",
+                            "/forgot-password",
                           ].includes(pathname)
                             ? styles.white
                             : styles.black
@@ -320,6 +333,7 @@ export default function Navbar() {
                 "/contactus",
                 "/aboutus",
                 "/events",
+                "/forgot-password",
               ].includes(pathname)
                 ? styles.white
                 : styles.black

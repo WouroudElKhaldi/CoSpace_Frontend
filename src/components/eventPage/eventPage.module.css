@@ -41,6 +41,16 @@
   text-align: center;
 }
 
+.space_holder {
+  width: 90%;
+  margin: 3rem auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  column-gap: 1rem;
+  row-gap: 2rem;
+}
+
 @media screen and (max-width: 1200px) {
   .img {
     background-position: right;
@@ -58,6 +68,10 @@
 @media screen and (max-width: 800px) {
   .slogan {
     font-size: 2.5rem;
+  }
+  .space_holder {
+    flex-direction: column;
+    align-items: center;
   }
 }
 

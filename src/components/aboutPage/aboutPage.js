@@ -1,42 +1,37 @@
+"use client";
+
 import Image from "next/image";
 import styles from "./aboutPage.module.css";
 import ChecklistIcon from "@mui/icons-material/Checklist";
 import ImportContactsIcon from "@mui/icons-material/ImportContacts";
 import FilterListIcon from "@mui/icons-material/FilterList";
+import FormatQuoteRoundedIcon from "@mui/icons-material/FormatQuoteRounded";
 
-import { Box } from "@mui/material";
+import Accordions from "../accordions/accordions";
 
 export default function AboutUsPage() {
   const data = [
     {
       title: "Listing All Lebanon's Spaces",
       description:
-        "Our platform provides a comprehensive directory of all coworking spaces in Lebanon, making it easy for individuals and businesses to find and compare options in one convenient location. From Tripoli, to Beirut, an, users can explore a diverse range of coworking spaces with detailed information on amenities, pricing, and location",
+        "Our platform simplifies finding coworking spaces in Lebanon. Users can easily compare options in Tripoli and Beirut, with detailed info on amenities, pricing, and locations.",
       icon: <ChecklistIcon />,
     },
     {
       title: "Effortless Booking Requests",
       description:
-        "Say goodbye to tedious booking processes. Our website streamlines the booking request process, allowing users to submit inquiries or reservation requests directly to coworking spaces with just a few clicks. Whether you need a desk for a day or a dedicated office for a month, booking your ideal workspace has never been easier",
+        "Our website simplifies coworking space bookings. Users can easily submit inquiries or reservations with just a few clicks. Finding your ideal workspace, whether for a day or a month, has never been easier",
       icon: <ImportContactsIcon />,
     },
     {
       title: "Personalized Filter",
       description:
-        "Discover the perfect workspace tailored to your needs. Our platform leverages intelligent algorithms to provide personalized recommendations based on your preferences, such as location, amenities, budget, and more. Say goodbye to endless scrolling and let us match you with the ideal coworking space in Lebanon",
+        "Find your perfect workspace effortlessly. Our platform's smart algorithms tailor recommendations based on your preferences. Say goodbye to endless searching – let us match you with Lebanon's ideal coworking space",
       icon: <FilterListIcon />,
     },
   ];
   return (
-    <Box
-      sx={{
-        ".MuiSvgIcon-root": {
-          width: "1.6rem",
-          height: "1.6rem",
-          color: "#6f84ae",
-        },
-      }}
-    >
+    <div className={styles.main}>
       <section className={styles.hero_Container}>
         <div className={styles.img}></div> {/* Background container */}
         <div className={styles.content}>
@@ -47,61 +42,71 @@ export default function AboutUsPage() {
       </section>
       <section className={styles.about}>
         <div className={styles.mission}>
-          <span className={styles.title_holder}>
-            <h2 className={styles.h2}>Our Mission</h2>
+          <span className={styles.mission_holder}>
             <Image
-              src="/title.svg"
-              width={100}
-              height={100}
-              alt="image"
-              className={styles.svg1}
+              className={styles.img1}
+              src="/desktop.svg"
+              width={400}
+              height={400}
+              alt="laptop"
             />
-          </span>
-          <p className={styles.p}>
-            {`At CoSpace, we're dedicated to simplifying the search
+            <p className={styles.p}>
+              <h2 className={styles.h2_2}>Our Mission</h2>
+              <FormatQuoteRoundedIcon className={styles.icon1} />
+              <FormatQuoteRoundedIcon className={styles.icon2} />
+              {`At CoSpace, we're dedicated to simplifying the search
             for coworking spaces in Lebanon. Our mission is to provide accurate,
             detailed listings that empower individuals and businesses to find
             the perfect workspace. We're committed to fostering inclusivity,
             community, and sustainability within Lebanon's coworking ecosystem`}
-          </p>
+            </p>
+          </span>
         </div>
         <article className={styles.service_holder}>
           <span className={styles.title_holder}>
             <h2 className={styles.h2}>CoSpace Features</h2>
-            <Image
-              src="/title.svg"
-              width={100}
-              height={100}
-              alt="image"
-              className={styles.svg2}
-            />
           </span>
-          {data.map((service, index) => {
-            const middle = index === 1 ? styles.middle : styles.topBottom;
-            return (
-              <section key={index} className={`${styles.service} ${middle}`}>
-                <span className={styles.left}>
+          <span className={styles.line_holder}>
+            <div className={styles.line}></div>
+            {data.map((service, index) => {
+              const middle = index === 1 ? styles.middle : styles.topBottom;
+              return (
+                <section key={index} className={`${styles.service} ${middle}`}>
+                  <span className={styles.right}>
+                    <p className={styles.service_title}>
+                      {service.icon} {service.title}
+                    </p>
+                    <p className={styles.description}>{service.description}</p>
+                  </span>
                   <Image
-                    src="/service.svg"
+                    src="/Polygon.png"
                     width={100}
                     height={100}
-                    alt={service.title}
-                    className={styles.image}
+                    className={styles.mark}
                   />
-                  <span className={styles.icon}>{index + 1}</span>
-                </span>
-                <span className={styles.right}>
-                  <p className={styles.service_title}>
-                    {service.icon} {service.title}
-                  </p>
-
-                  <p className={styles.description}>{service.description}</p>
-                </span>
-              </section>
-            );
-          })}
+                </section>
+              );
+            })}
+          </span>
         </article>
       </section>
-    </Box>
+      <section className={styles.faq}>
+        <span className={styles.span}>
+          <div className={styles.faqLeft}>
+            <Image
+              src="/FAQs.svg"
+              alt="Frequent Asked Question"
+              width={300}
+              height={300}
+            />
+          </div>
+          <div className={styles.faqRight}>
+            <Accordions />
+          </div>
+          <span className={styles.faq_line1}></span>
+          <span className={styles.faq_line2}></span>
+        </span>
+      </section>
+    </div>
   );
 }

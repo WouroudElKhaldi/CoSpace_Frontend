@@ -7,13 +7,11 @@ export const LoginFunction = async (data) => {
       email: email,
       password: password,
     });
-    if (res.status !== 200) {
-      throw new Error("Failed to Login");
+    if (res) {
+      return res;
     }
-    return res;
   } catch (error) {
-    console.log(error);
-    throw new Error("Failed");
+    return { errorMessage: error.response.data, status: error.response.status };
   }
 };
 
@@ -27,13 +25,11 @@ export const SignupFunction = async (data) => {
       role: role,
       phoneNumber: phoneNumber,
     });
-    if (res.status !== 200) {
-      throw new Error("Failed to Sign Up");
+    if (res) {
+      return res;
     }
-    return res;
   } catch (error) {
-    console.log(error);
-    throw new Error("Failed");
+    return { errorMessage: error.response.data, status: error.response.status };
   }
 };
 
@@ -51,6 +47,35 @@ export const VerifyFunction = async (data) => {
   } catch (error) {
     console.log(error);
     throw new Error("Failed");
+  }
+};
+
+export const RecoverPassword = async ({ email, code }) => {
+  try {
+    const res = await axiosInstance.post("/user/recover", {
+      email: email,
+      code: code,
+    });
+    return res;
+  } catch (error) {
+    console.log(error);
+    return { errorMessage: error.response.data, status: error.response.status };
+  }
+};
+
+export const ResetPassword = async (data) => {
+  try {
+    const { email, password, resetCode, userCode } = data;
+    const res = await axiosInstance.post("/user/reset", {
+      email: email,
+      password: password,
+      resetCode: resetCode,
+      userCode: userCode,
+    });
+    return res;
+  } catch (error) {
+    console.log(error);
+    return { errorMessage: error.response.data, status: error.response.status };
   }
 };
 

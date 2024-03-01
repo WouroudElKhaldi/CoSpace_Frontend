@@ -9,7 +9,7 @@ export default function HeroComp() {
   let mystrings;
   mystrings = [""];
   useEffect(() => {
-    mystrings.push("  Cowork", "  Create", "  Collaborate");
+    mystrings.push("  COWORK ?", "  CREATE ?", "  COLLABORATE ?");
 
     const typed = new Typed(slogan.current, {
       strings: mystrings,
@@ -25,15 +25,25 @@ export default function HeroComp() {
   const slogan = useRef();
   return (
     <section className={styles.container}>
-      <div className={styles.img}></div> {/* Background container */}
-      <div className={styles.content}>
-        <div className={styles.slogan__container}>
-          <p className={styles.slogan}>
-            Coworking spaces designed for you to{" "}
-            <span ref={slogan} className={styles.typed}></span>
-          </p>
-          <Link href="/spaces" className={styles.btn}>
+      <div className={styles.img}></div>
+      <div className={styles.content1}>
+        <div className={styles.slogan__container1}>
+          <p className={styles.slogan1}>LOOKING FOR A PLACE TO</p>
+          <span className={styles.span_slogan}>
+            <span ref={slogan} className={styles.typed1}></span>
+          </span>
+          <Link href="/spaces" className={styles.btn1}>
             Book your place
+          </Link>
+        </div>
+      </div>
+      <div className={styles.img2}></div>
+      <div className={styles.content2}>
+        <div className={styles.slogan__container2}>
+          <p className={styles.slogan2}>DO YOU OWN A PROFFESIONAL</p>
+          <span className={styles.typed2}>WORK SPACE?</span>
+          <Link href="/spaces" className={styles.btn2}>
+            List Your Space
           </Link>
         </div>
       </div>

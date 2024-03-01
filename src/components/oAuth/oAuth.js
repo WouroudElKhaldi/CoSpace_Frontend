@@ -3,36 +3,40 @@
 import { Button } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Image from "next/image";
+import axiosInstance from "@/utils/axiosInstance";
+import { useContext, useState } from "react";
+import { AuthContext } from "@/context/authContext";
+import app from "@/app/firebase";
+import { useRouter } from "next/navigation";
 
 const OAuth = ({ isLogin }) => {
-  const loading = false;
-  //   const {apiCall , loading } = useApi()
-  //   const {fetchUserData , setUser} = useContext(AuthContext)
-  //   const handleGoogleClick = async () => {
-  //     try {
-  //       const provider = new GoogleAuthProvider();
-  //       const auth = getAuth(app);
+  const [loading, setLoading] = useState(false);
+  const { fetchUserData } = useContext(AuthContext);
+  const router = useRouter();
+  const handleGoogleClick = async () => {
+    try {
+      setLoading(true);
+      const provider = new GoogleAuthProvider();
+      const auth = getAuth(app);
 
-  //       const result = await signInWithPopup(auth, provider);
-  //       console.log(result);
+      const result = await signInWithPopup(auth, provider);
+      console.log(result);
 
-  //       const response = await apiCall({
-  //         url : `${process.env.REACT_APP_BACKEND_ENDPOINT}user/google`,
-  //         method : 'post',
-  //         data :         {
-  //           name: result.user.displayName,
-  //           email: result.user.email,
-  //           photo: result.user.photoURL,
-  //         }
-  //       }
-  //       );
-  //       setUser(response)
-  //       await fetchUserData()
-  //       redirect("/");
-  //     } catch (error) {
-  //       console.log("could not sign in with google", error);
-  //     }
-  //   };
+      const response = await axiosInstance.post(
+        `${process.env.BACKEND_PATH}user/google`,
+        {
+          name: result.user.displayName,
+          email: result.user.email,
+          photo: result.user.photoURL,
+        }
+      );
+      setLoading(false);
+      await fetchUserData();
+      router.push("/");
+    } catch (error) {
+      console.log("could not sign in with google", error);
+    }
+  };
   return (
     <>
       {loading ? (
@@ -41,7 +45,7 @@ const OAuth = ({ isLogin }) => {
         <Button
           variant="contained"
           fullWidth
-          //   onClick={handleGoogleClick}
+          onClick={handleGoogleClick}
           startIcon={
             <Image src={"/G.png"} width={20} height={20} alt="googleImage" />
           }

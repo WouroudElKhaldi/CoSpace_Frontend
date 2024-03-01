@@ -19,19 +19,34 @@
 .info {
   border-radius: 0 0 15px 15px;
   padding: 10px 10px 30px 10px;
-}
-
-.title {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  row-gap: 0.5rem;
 }
 
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.top .price {
+  font-weight: 500;
+}
 .card:hover {
   background-color: rgba(255, 255, 255, 0.5);
 }
 
 .card:hover .title {
   color: var(--color-brown);
+}
+
+.btm {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 @media (max-width: 1160px) {
@@ -113,6 +128,12 @@
   .card.home,
   .card.home .img {
     width: 15rem !important;
+  }
+  .card {
+    width: 90%;
+  }
+  .img {
+    width: 100%;
   }
 }
 

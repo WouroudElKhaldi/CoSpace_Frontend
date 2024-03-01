@@ -1,6 +1,26 @@
+"use client";
+
+import { getAllEvents } from "@/fetchData/event";
 import styles from "./eventPage.module.css";
+import useEventStore from "@/zustand/eventsStore";
+import Loading from "../loading/loading";
+import { EventComp } from "../eventComp/eventComp";
+import { useState, useEffect } from "react";
 
 export default function EventPage() {
+  const [loading, setLoading] = useState(false);
+  const { eventsData, setEventsData } = useEventStore();
+  useEffect(() => {
+    const fetchEvents = async () => {
+      setLoading(true);
+
+      const res = await getAllEvents();
+      setEventsData(res.data);
+    };
+
+    fetchEvents();
+    setLoading(false);
+  }, []);
   return (
     <div>
       <section className={styles.hero_Container}>
@@ -11,6 +31,18 @@ export default function EventPage() {
           </div>
         </div>
       </section>
+      <div className={styles.space_holder}>
+        {loading ? (
+          <Loading />
+        ) : (
+          <>
+            {eventsData &&
+              eventsData.map((event, index) => {
+                return <EventComp key={index} data={event} />;
+              })}
+          </>
+        )}
+      </div>
     </div>
   );
 }

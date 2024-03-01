@@ -5,7 +5,7 @@ import Modal from "@mui/material/Modal";
 import { Box, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
-import styles from "./DeleteSpace.module.css";
+import styles from "../userModal/userModal.module.css";
 import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import { deleteSpace } from "@/fetchData/spaces";
@@ -111,9 +111,9 @@ const DeleteSpaceModal = ({
             size="large"
             onClick={handleDelete}
             sx={{
-              bgcolor: "#4d6188",
+              bgcolor: "#4d6188 !important",
               ":hover": {
-                bgcolor: "#6f84ae",
+                bgcolor: "#6f84ae !important",
               },
             }}
           >
