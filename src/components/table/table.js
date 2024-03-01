@@ -104,7 +104,7 @@ const Table = ({
             return (
               <div className={styles.image}>
                 <img
-                  src={`http://localhost:2004/images/${
+                  src={`${process.env.BACKEND_PATH}images/${
                     params.row.image ? params.row.image : ""
                   }`}
                   alt="Icon"
@@ -116,7 +116,7 @@ const Table = ({
           if (field === "image" && params.row.image) {
             return (
               <img
-                src={`http://localhost:2004/images/${
+                src={`${process.env.BACKEND_PATH}images/${
                   params.row.image ? params.row.image : ""
                 }`}
                 alt="Icon"
