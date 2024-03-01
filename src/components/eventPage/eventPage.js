@@ -16,11 +16,11 @@ export default function EventPage() {
 
       const res = await getAllEvents();
       setEventsData(res.data);
+      setLoading(false);
     };
 
     fetchEvents();
-    setLoading(false);
-  }, []);
+  }, [setEventsData]);
   return (
     <div>
       <section className={styles.hero_Container}>
@@ -33,7 +33,7 @@ export default function EventPage() {
       </section>
       <div className={styles.space_holder}>
         {loading ? (
-          <Loading />
+          <Loading height={"40vh"} width={"100vw"} />
         ) : (
           <>
             {eventsData &&

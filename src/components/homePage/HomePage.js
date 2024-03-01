@@ -21,6 +21,7 @@ export default function HomePage() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    const refVar = containerRef.current;
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsVisible(entry.isIntersecting);
@@ -33,8 +34,8 @@ export default function HomePage() {
     }
 
     return () => {
-      if (containerRef.current) {
-        observer.unobserve(containerRef.current);
+      if (refVar) {
+        observer.unobserve(refVar);
       }
     };
   }, []);
@@ -54,7 +55,7 @@ export default function HomePage() {
 
     fetchSpaces();
     fetchTopSpaces();
-  }, []);
+  }, [setSpacesData, setTop5Spaces]);
 
   useEffect(() => {
     if (alertData.message !== "") {
@@ -79,7 +80,7 @@ export default function HomePage() {
         }, 40);
         return () => clearTimeout(timeout);
       }
-    }, [isVisible, count, value]);
+    }, [isVisible, count, value, isVisible]);
 
     return <span className={styles.map_info_num}>{count}+</span>;
   };
@@ -98,7 +99,7 @@ export default function HomePage() {
         </span>
         <div className={styles.space_holder}>
           {loading ? (
-            <Loading height={"50vh"} />
+            <Loading width={"50vh"} />
           ) : (
             <>
               {spacesData &&
@@ -146,7 +147,7 @@ export default function HomePage() {
         </span>
         <div className={styles.space_holder}>
           {loading ? (
-            <Loading height={"50vh"} />
+            <Loading width={"50vh"} />
           ) : (
             <>
               {spacesData &&

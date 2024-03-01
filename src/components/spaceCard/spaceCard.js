@@ -18,6 +18,7 @@ export default function SpaceCard({ data }) {
   const [images, setImages] = useState([]);
 
   useEffect(() => {
+    const varRef = cardRef.current;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -33,8 +34,8 @@ export default function SpaceCard({ data }) {
     }
 
     return () => {
-      if (cardRef.current) {
-        observer.unobserve(cardRef.current);
+      if (varRef) {
+        observer.unobserve(varRef);
       }
     };
   }, [controls]);

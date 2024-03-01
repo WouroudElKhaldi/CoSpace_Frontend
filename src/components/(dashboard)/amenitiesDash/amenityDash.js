@@ -27,7 +27,7 @@ const AmenityDash = () => {
     };
 
     fetchAmenities();
-  }, [success]);
+  }, [success, setAmenitiesData]);
   return (
     <Box>
       <div className={styles.h1_container}>

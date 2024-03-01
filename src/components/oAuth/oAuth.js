@@ -23,7 +23,7 @@ const OAuth = ({ isLogin }) => {
       console.log(result);
 
       const response = await axiosInstance.post(
-        `${process.env.BACKEND_PATH}user/google`,
+        `${process.env.NEXT_PUBLIC_BACKEND_PATH}user/google`,
         {
           name: result.user.displayName,
           email: result.user.email,

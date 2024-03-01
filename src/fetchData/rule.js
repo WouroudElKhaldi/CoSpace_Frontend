@@ -49,7 +49,7 @@ export const deleteRule = async ({ id }) => {
 export const addRule = async ({ spaceId, name, image }) => {
   try {
     const res = await axios.post(
-      `${process.env.BACKEND_PATH}rules`,
+      `${process.env.NEXT_PUBLIC_BACKEND_PATH}rules`,
       {
         spaceId,
         name,
@@ -72,7 +72,7 @@ export const addRule = async ({ spaceId, name, image }) => {
 export const editRule = async ({ id, name, image }) => {
   try {
     const res = await axios.patch(
-      `${process.env.BACKEND_PATH}rules`,
+      `${process.env.NEXT_PUBLIC_BACKEND_PATH}rules`,
       {
         id,
         name,

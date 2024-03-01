@@ -8,6 +8,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { AuthContext } from "@/context/authContext";
+import Image from "next/image";
 
 const Table = ({
   data,
@@ -55,7 +56,7 @@ const Table = ({
     return localDate.toLocaleDateString("en-GB", options);
   };
 
-  let visibleFields;
+  let visibleFields = [""];
   useEffect(() => {
     try {
       if (ForWhat === "spaces") {
@@ -103,24 +104,28 @@ const Table = ({
           ) {
             return (
               <div className={styles.image}>
-                <img
-                  src={`${process.env.BACKEND_PATH}images/${
+                <Image
+                  src={`${process.env.NEXT_PUBLIC_BACKEND_PATH}images/${
                     params.row.image ? params.row.image : ""
                   }`}
                   alt="Icon"
                   style={{ width: "80", height: "50px" }}
+                  width={80}
+                  height={60}
                 />
               </div>
             );
           }
           if (field === "image" && params.row.image) {
             return (
-              <img
-                src={`${process.env.BACKEND_PATH}images/${
+              <Image
+                src={`${process.env.NEXT_PUBLIC_BACKEND_PATH}images/${
                   params.row.image ? params.row.image : ""
                 }`}
                 alt="Icon"
                 style={{ width: "100", height: "80px" }}
+                width={100}
+                height={80}
               />
             );
           }

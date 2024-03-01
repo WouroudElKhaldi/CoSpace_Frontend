@@ -27,7 +27,7 @@ export const deleteAmenity = async ({ id }) => {
 export const addAmenity = async ({ name, category, image }) => {
   try {
     const res = await axios.post(
-      `${process.env.BACKEND_PATH}/amenities`,
+      `${process.env.NEXT_PUBLIC_BACKEND_PATH}/amenities`,
       {
         name,
         category,
@@ -51,7 +51,7 @@ export const editAmenity = async ({ id, data }) => {
   const { name, category, image } = data;
   try {
     const res = await axios.patch(
-      `${process.env.BACKEND_PATH}amenities`,
+      `${process.env.NEXT_PUBLIC_BACKEND_PATH}amenities`,
       {
         id: id,
         name,
