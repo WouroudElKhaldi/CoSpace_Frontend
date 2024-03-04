@@ -34,6 +34,7 @@ import RuleIcon from "@mui/icons-material/Rule";
 
 import Link from "next/link";
 import Loading from "@/components/loading/loading";
+import Image from "next/image";
 
 export default function DashLayout({ children, role, admin }) {
   const router = useRouter();
@@ -49,8 +50,6 @@ export default function DashLayout({ children, role, admin }) {
       }
       setScreenWidth(window.innerWidth);
     };
-
-    setScreenWidth(window.innerWidth);
 
     window.addEventListener("resize", handleResize);
 
@@ -199,8 +198,19 @@ export default function DashLayout({ children, role, admin }) {
             </Toolbar>
           </AppBar>
           <Drawer variant="permanent" open={open}>
-            <DrawerHeader>
-              hello
+            <DrawerHeader
+              sx={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <Image
+                src={"/logo2.svg"}
+                width={80}
+                height={80}
+                alt="CoSpace Logo"
+              />
               <IconButton onClick={handleDrawerClose}>
                 {theme.direction === "rtl" ? (
                   <ChevronRightIcon />

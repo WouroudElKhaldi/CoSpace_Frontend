@@ -59,6 +59,9 @@
   .slogan {
     font-size: 3.5rem;
   }
+  .space_holder {
+    margin: 4rem auto;
+  }
 }
 
 @media screen and (855px < width < 955px) {

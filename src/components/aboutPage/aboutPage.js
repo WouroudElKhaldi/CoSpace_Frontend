@@ -83,6 +83,7 @@ export default function AboutUsPage() {
                     width={100}
                     height={100}
                     className={styles.mark}
+                    alt="polygon"
                   />
                 </section>
               );

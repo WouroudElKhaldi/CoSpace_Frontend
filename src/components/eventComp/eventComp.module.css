@@ -3,12 +3,16 @@
   align-items: center;
   width: 35vw;
   max-width: 35vw;
-  padding: 50px 30px 50px 20px;
-  background: var(--color-blue);
+  padding: 30px 20px;
+  background: var(--color-brown);
   border-radius: 24px;
   color: #fdfcfd;
-  margin: 0 3rem;
+  margin: 0 0 0 3rem;
   height: fit-content;
+}
+
+.container {
+  width: 70%;
 }
 
 .holder .img {
@@ -16,7 +20,7 @@
   height: 100%;
   object-fit: cover;
   margin-left: -60px;
-  margin-right: 30px;
+  margin-right: 20px;
   border-radius: inherit;
   box-shadow: 0 60px 40px rgb(0 0 0 / 8%);
   transition: all 0.2s ease;
@@ -52,12 +56,18 @@
   opacity: 0.5;
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1400px) {
+  .container {
+    width: 60%;
+  }
+}
+
+@media (max-width: 1200px) {
   .holder {
     margin: 2rem 0;
-    padding-left: 50px;
-    padding-right: 50px;
-    padding-bottom: 60px;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 30px;
     width: 40vw;
     max-width: none;
     text-align: center;
@@ -71,13 +81,17 @@
 
   .holder .img {
     margin: -100px 0 30px 0;
-    width: 100%;
+    width: 90%;
     max-width: none;
-    height: 250px;
+    height: 200px;
   }
 
-  .description {
-    max-width: 360px;
+  .container {
+    width: 100%;
+  }
+
+  .date {
+    margin-top: 0.5rem;
   }
 }
 

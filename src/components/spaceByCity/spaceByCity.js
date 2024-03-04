@@ -16,7 +16,7 @@ export default function SpaceByCity({ city }) {
     };
 
     fetchData();
-  }, []);
+  }, [city, setSpacesByCity]);
   return (
     <main>
       <div className={styles}>

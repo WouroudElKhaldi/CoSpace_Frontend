@@ -25,6 +25,19 @@ export const getAllSpaces = async () => {
 };
 
 // getting all the spaces (approved)
+export const getOneSpace = async ({ id }) => {
+  const res = await axiosInstance.post("space/byId", {
+    id: id,
+  });
+
+  if (res.status !== 200) {
+    throw new Error("Failed to fetch Data");
+  }
+
+  return res;
+};
+
+// getting all the spaces (approved)
 export const getSpacesByUser = async ({ userId }) => {
   try {
     const res = axiosInstance.post("space/byUser", {

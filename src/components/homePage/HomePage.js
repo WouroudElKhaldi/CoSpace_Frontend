@@ -99,7 +99,7 @@ export default function HomePage() {
         </span>
         <div className={styles.space_holder}>
           {loading ? (
-            <Loading width={"50vh"} />
+            <Loading width={"100vw"} height={"50vh"} />
           ) : (
             <>
               {spacesData &&
@@ -147,7 +147,7 @@ export default function HomePage() {
         </span>
         <div className={styles.space_holder}>
           {loading ? (
-            <Loading width={"50vh"} />
+            <Loading height={"50vh"} width={"100vw"} />
           ) : (
             <>
               {spacesData &&

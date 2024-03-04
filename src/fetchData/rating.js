@@ -9,6 +9,17 @@ export const getAllRatings = async () => {
   }
 };
 
+export const getRatingsBySapce = async ({ id }) => {
+  try {
+    const response = await axiosInstance.post("rating/bySpace", {
+      spaceId: id,
+    });
+    return response;
+  } catch (error) {
+    return { errorMessage: error.response.data, status: error.response.status };
+  }
+};
+
 //byUser_Space
 export const getRatingsByManagerId = async (userId) => {
   try {
@@ -54,9 +65,7 @@ export const addRating = async ({ data }) => {
       rate,
       message,
     });
-    if (res) {
-      return res;
-    }
+    return res;
   } catch (error) {
     return { errorMessage: error.response.data, status: error.response.status };
   }

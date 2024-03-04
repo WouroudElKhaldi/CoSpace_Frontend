@@ -60,15 +60,26 @@ export default function SpaceCard({ data }) {
         <div className={styles.info}>
           <p className={styles.top}>
             <p className={styles.title}>{data.name}</p>
-            <span className={styles.price}>⭐ 4.93</span>
+            {data.averageRating && (
+              <span className={styles.price}>
+                ⭐{parseFloat(data.averageRating).toFixed(2)}
+              </span>
+            )}
           </p>
           <p className={styles.owner}>
-            <b>Owner: </b>
-            {data.userId.fullName}
+            Srarting{" "}
+            <b
+              style={{
+                marginLeft: "0.5rem",
+              }}
+            >
+              {" " + data.dailyPrice}
+            </b>
+            $ /day
           </p>
           <span className={styles.btm}>
-            <p className={styles.type}>{data.categoryId.name} Space</p>
-            <p className={styles.location}>{data.cityId.city}</p>
+            <p className={styles.type}>{data.category.name} Space</p>
+            <p className={styles.location}>{data.city.city}</p>
           </span>
         </div>
       </Link>

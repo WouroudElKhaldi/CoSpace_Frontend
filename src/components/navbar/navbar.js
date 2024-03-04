@@ -47,7 +47,11 @@ export default function Navbar() {
         <Link href="/">
           <div>
             <Image
-              src={isDarkFont ? "/logo2.svg" : "/logo.svg"}
+              src={
+                isDarkFont || pathname.includes("spaces/")
+                  ? "/logo2.svg"
+                  : "/logo.svg"
+              }
               width={100}
               height={100}
               alt="Co-Space Logo"

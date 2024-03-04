@@ -23,7 +23,7 @@ const Table = ({
   const [error, setError] = useState(false);
   const buton = isEdit === true ? true : false;
 
-  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const [screenWidth, setScreenWidth] = useState();
   useEffect(() => {
     const handleResize = () => {
       const newWidth = window.innerWidth;

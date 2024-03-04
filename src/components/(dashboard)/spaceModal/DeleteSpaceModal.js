@@ -34,6 +34,7 @@ const DeleteSpaceModal = ({
     justifyContent: "center",
     alignItems: "center",
     rowGap: "1.5rem",
+    borderRadius: "15px",
   };
 
   const divStyle = {

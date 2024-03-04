@@ -5,19 +5,20 @@ import FacebookRoundedIcon from "@mui/icons-material/FacebookRounded";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import Link from "next/link";
+import Image from "next/image";
 
 function Footer({ width }) {
   return (
     <footer
       className={`${styles.footer}`}
       style={{
-        width: width
+        width: width,
       }}
     >
       <div className={styles.top}>
         <div className={styles.links}>
           <div className={styles.linksColumn}>
-            <div>CoSpace</div>
+            <Image src={"/logo2.svg"} width={80} height={80} alt="CoSpace" />
             <p className={styles.p}>
               Explore the essence of Lebanon with our authentic spices,
               delivered worldwide for a flavorful journey in every dish.
