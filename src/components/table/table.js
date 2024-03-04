@@ -14,7 +14,7 @@ import dynamic from "next/dynamic";
 
 const useWindowSize = dynamic(
   () => {
-    return import("../../hooks/window");
+    return import("@/hooks/window");
   },
   { ssr: false }
 );
