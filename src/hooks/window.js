@@ -28,8 +28,10 @@ export default function useWindowSize() {
     window.addEventListener("resize", handleResize);
     window.addEventListener("scroll", handleScroll); // Add scroll event listener
 
-    handleResize(); // Call handleResize initially
-    handleScroll(); // Call handleScroll initially
+    if (typeof window !== "undefined") {
+      handleResize(); // Call handleResize initially
+      handleScroll(); // Call handleScroll initially
+    }
 
     return () => {
       window.removeEventListener("resize", handleResize);
