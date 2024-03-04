@@ -9,6 +9,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { AuthContext } from "@/context/authContext";
 import Image from "next/image";
+import useWindowSize from "@/hooks/window";
 
 const Table = ({
   data,
@@ -22,20 +23,20 @@ const Table = ({
   const [columns, setColumns] = useState([]);
   const [error, setError] = useState(false);
   const buton = isEdit === true ? true : false;
-
-  const [screenWidth, setScreenWidth] = useState();
-  useEffect(() => {
-    if (typeof window === undefined) {
-      const handleResize = () => {
-        const newWidth = window.innerWidth;
-        setScreenWidth(newWidth);
-      };
-      window.addEventListener("resize", handleResize);
-      return () => {
-        window.removeEventListener("resize", handleResize);
-      };
-    }
-  }, []);
+  const windowSize = useWindowSize();
+  // const [screenWidth, setScreenWidth] = useState();
+  // useEffect(() => {
+  //   if (typeof window !== undefined) {
+  //     const handleResize = () => {
+  //       const newWidth = window.innerWidth;
+  //       setScreenWidth(newWidth);
+  //     };
+  //     window.addEventListener("resize", handleResize);
+  //     return () => {
+  //       window.removeEventListener("resize", handleResize);
+  //     };
+  //   }
+  // }, []);
 
   const handleEdit = (e, row) => {
     e.preventDefault();
@@ -97,7 +98,7 @@ const Table = ({
       const updatedColumns = visibleFields.map((field) => ({
         field,
         headerName: field,
-        flex: screenWidth < 1000 ? 0 : 1,
+        flex: windowSize.width < 1000 ? 0 : 1,
         renderCell: (params) => {
           if (
             ForWhat === "amenities" &&
@@ -220,7 +221,7 @@ const Table = ({
       setError(true);
       console.error(error);
     }
-  }, [ForWhat, buton, data, screenWidth]);
+  }, [ForWhat, buton, data, windowSize.width]);
 
   return (
     <>
@@ -313,7 +314,7 @@ const Table = ({
                 height: "100px !important",
                 maxHeight: "100px !important",
                 fontSize: "1.2rem",
-                mb: screenWidth < 500 ? "1rem" : "0",
+                mb: windowSize.width < 500 ? "1rem" : "0",
               },
             "& .MuiDataGrid-columnHeaderTitleContainer": {
               color: "#4d6188 !important",

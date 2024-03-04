@@ -35,29 +35,30 @@ import RuleIcon from "@mui/icons-material/Rule";
 import Link from "next/link";
 import Loading from "@/components/loading/loading";
 import Image from "next/image";
+import useWindowSize from "@/hooks/window";
 
 export default function DashLayout({ children, role, admin }) {
   const router = useRouter();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  const [screenWidth, setScreenWidth] = useState();
+  // const [screenWidth, setScreenWidth] = useState();
+  const { width, height } = useWindowSize();
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (typeof window === undefined) {
-        setScreenWidth(0);
-      }
-      setScreenWidth(window.innerWidth);
-      window.addEventListener("resize", handleResize);
-      return () => {
-        window.removeEventListener("resize", handleResize);
-      };
-    };
-  }, []);
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     if (typeof window !== undefined) {
+  //       setScreenWidth(window.innerWidth);
+  //       window.addEventListener("resize", handleResize);
+  //       return () => {
+  //         window.removeEventListener("resize", handleResize);
+  //       };
+  //     }
+  //   };
+  // }, []);
 
   const openedMixin = (theme) => ({
-    width: screenWidth > 1100 ? "15vw" : "20vw",
+    width: width > 1100 ? "15vw" : "20vw",
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -95,8 +96,8 @@ export default function DashLayout({ children, role, admin }) {
       duration: theme.transitions.duration.leavingScreen,
     }),
     ...(open && {
-      marginLeft: screenWidth > 1100 ? "15vw" : "20vw",
-      width: `calc(100% - ${screenWidth > 1100 ? "15vw" : "20vw"})`,
+      marginLeft: width > 1100 ? "15vw" : "20vw",
+      width: `calc(100% - ${width > 1100 ? "15vw" : "20vw"})`,
       transition: theme.transitions.create(["width", "margin"], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.enteringScreen,
@@ -107,7 +108,7 @@ export default function DashLayout({ children, role, admin }) {
   const Drawer = styled(MuiDrawer, {
     shouldForwardProp: (prop) => prop !== "open",
   })(({ theme, open }) => ({
-    width: screenWidth > 1100 ? "15vw" : "20vh",
+    width: width > 1100 ? "15vw" : "20vh",
     flexShrink: 0,
     whiteSpace: "nowrap",
     boxSizing: "border-box",

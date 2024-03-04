@@ -12,6 +12,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { IconButton } from "@mui/material";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import useWindowSize from "@/hooks/window";
 
 export default function Navbar() {
   const router = useRouter();
@@ -21,20 +22,26 @@ export default function Navbar() {
   const [hasScrolled, setHasScrolled] = useState(false);
   const [isDarkFont, setIsDarkFont] = useState(false);
 
+  const windowSize = useWindowSize();
+  // useEffect(() => {
+  //   if (typeof window !== undefined) {
+  //     const handleScroll = () => {
+  //       setHasScrolled(window.scrollY > 0);
+  //       setIsDarkFont(window.scrollY > 350);
+  //     };
+
+  //     window.addEventListener("scroll", handleScroll);
+
+  //     return () => {
+  //       window.removeEventListener("scroll", handleScroll);
+  //     };
+  //   }
+  // }, []);
+
   useEffect(() => {
-    if (typeof window === undefined) {
-      const handleScroll = () => {
-        setHasScrolled(window.scrollY > 0);
-        setIsDarkFont(window.scrollY > 350);
-      };
-
-      window.addEventListener("scroll", handleScroll);
-
-      return () => {
-        window.removeEventListener("scroll", handleScroll);
-      };
-    }
-  }, []);
+    setHasScrolled(windowSize.scrollY > 0);
+    setIsDarkFont(windowSize.scrollY > 350);
+  }, [windowSize.scrollY]);
 
   return (
     // Header Container
