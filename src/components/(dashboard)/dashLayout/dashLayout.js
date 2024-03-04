@@ -49,12 +49,10 @@ export default function DashLayout({ children, role, admin }) {
         setScreenWidth(0);
       }
       setScreenWidth(window.innerWidth);
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
+      window.addEventListener("resize", handleResize);
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
     };
   }, []);
 

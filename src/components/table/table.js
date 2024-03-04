@@ -25,14 +25,16 @@ const Table = ({
 
   const [screenWidth, setScreenWidth] = useState();
   useEffect(() => {
-    const handleResize = () => {
-      const newWidth = window.innerWidth;
-      setScreenWidth(newWidth);
-    };
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
+    if (typeof window === undefined) {
+      const handleResize = () => {
+        const newWidth = window.innerWidth;
+        setScreenWidth(newWidth);
+      };
+      window.addEventListener("resize", handleResize);
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+    }
   }, []);
 
   const handleEdit = (e, row) => {

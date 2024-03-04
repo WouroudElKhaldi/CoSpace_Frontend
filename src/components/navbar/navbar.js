@@ -22,16 +22,18 @@ export default function Navbar() {
   const [isDarkFont, setIsDarkFont] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setHasScrolled(window.scrollY > 0);
-      setIsDarkFont(window.scrollY > 350);
-    };
+    if (typeof window === undefined) {
+      const handleScroll = () => {
+        setHasScrolled(window.scrollY > 0);
+        setIsDarkFont(window.scrollY > 350);
+      };
 
-    window.addEventListener("scroll", handleScroll);
+      window.addEventListener("scroll", handleScroll);
 
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+      };
+    }
   }, []);
 
   return (
