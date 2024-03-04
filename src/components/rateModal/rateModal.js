@@ -19,7 +19,7 @@ export function RateModal({
   const { setAlertData } = useAlertStore();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    userId: user.id,
+    userId: user && user.id,
     spaceId: spaceID,
     message: "",
     rate: null,

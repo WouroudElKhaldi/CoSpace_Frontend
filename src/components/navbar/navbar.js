@@ -12,14 +12,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { IconButton } from "@mui/material";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import dynamic from "next/dynamic";
-
-const useWindowSize = dynamic(
-  () => {
-    return import("@/hooks/window");
-  },
-  { ssr: false }
-);
+// import useWindowSize from "@/hooks/window";
 
 export default function Navbar() {
   const router = useRouter();
@@ -29,7 +22,7 @@ export default function Navbar() {
   const [hasScrolled, setHasScrolled] = useState(false);
   const [isDarkFont, setIsDarkFont] = useState(false);
 
-  const windowSize = useWindowSize();
+  // const windowSize = useWindowSize();
   // useEffect(() => {
   //   if (typeof window !== undefined) {
   //     const handleScroll = () => {
@@ -45,17 +38,17 @@ export default function Navbar() {
   //   }
   // }, []);
 
-  useEffect(() => {
-    setHasScrolled(windowSize.scrollY > 0);
-    setIsDarkFont(windowSize.scrollY > 350);
-  }, [windowSize.scrollY]);
+  // useEffect(() => {
+  //   setHasScrolled(windowSize.scrollY > 0);
+  //   setIsDarkFont(windowSize.scrollY > 350);
+  // }, [windowSize.scrollY]);
 
   return (
     // Header Container
     <header
-      className={`${styles.headerContainer} ${
-        hasScrolled ? styles.scrolled : ""
-      } ${isDarkFont ? styles.darkFont : ""} 
+      className={`${styles.headerContainer} ${styles.scrolled} ${
+        styles.darkFont
+      } 
       ${!nav ? styles.normal : styles.notNormal}
       `}
     >

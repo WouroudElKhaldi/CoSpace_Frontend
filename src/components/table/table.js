@@ -9,15 +9,16 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { AuthContext } from "@/context/authContext";
 import Image from "next/image";
+import { useWindowHeight, useWindowWidth } from "@react-hook/window-size";
 // import useWindowSize from "@/hooks/window";
-import dynamic from "next/dynamic";
+// import dynamic from "next/dynamic";
 
-const useWindowSize = dynamic(
-  () => {
-    return import("@/hooks/window");
-  },
-  { ssr: false }
-);
+// const useWindowSize = dynamic(
+//   () => {
+//     return import("@/hooks/window");
+//   },
+//   { ssr: false }
+// );
 const Table = ({
   data,
   isEdit,
@@ -26,11 +27,13 @@ const Table = ({
   setSelectedRowData,
   handleOpenDelete,
 }) => {
+  // const windowHeight = useWindowHeight();
+  const windowWidth = useWindowWidth();
   const { user } = useContext(AuthContext);
   const [columns, setColumns] = useState([]);
   const [error, setError] = useState(false);
   const buton = isEdit === true ? true : false;
-  const windowSize = useWindowSize();
+  // const windowSize = useWindowSize();
   // const [screenWidth, setScreenWidth] = useState();
   // useEffect(() => {
   //   if (typeof window !== undefined) {
@@ -105,7 +108,7 @@ const Table = ({
       const updatedColumns = visibleFields.map((field) => ({
         field,
         headerName: field,
-        flex: windowSize.width < 1000 ? 0 : 1,
+        flex: windowWidth < 1000 ? 0 : 1,
         renderCell: (params) => {
           if (
             ForWhat === "amenities" &&
@@ -228,7 +231,7 @@ const Table = ({
       setError(true);
       console.error(error);
     }
-  }, [ForWhat, buton, data, windowSize.width]);
+  }, [ForWhat, buton, data, windowWidth]);
 
   return (
     <>
@@ -321,7 +324,7 @@ const Table = ({
                 height: "100px !important",
                 maxHeight: "100px !important",
                 fontSize: "1.2rem",
-                mb: windowSize.width < 500 ? "1rem" : "0",
+                mb: windowWidth < 500 ? "1rem" : "0",
               },
             "& .MuiDataGrid-columnHeaderTitleContainer": {
               color: "#4d6188 !important",

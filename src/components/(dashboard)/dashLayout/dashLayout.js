@@ -35,22 +35,26 @@ import RuleIcon from "@mui/icons-material/Rule";
 import Link from "next/link";
 import Loading from "@/components/loading/loading";
 import Image from "next/image";
-import dynamic from "next/dynamic";
+import { useWindowHeight, useWindowWidth } from "@react-hook/window-size";
 
-const useWindowSize = dynamic(
-  () => {
-    return import("@/hooks/window");
-  },
-  { ssr: false }
-);
+// import dynamic from "next/dynamic";
+
+// const useWindowSize = dynamic(
+//   () => {
+//     return import("@/hooks/window");
+//   },
+//   { ssr: false }
+// );
 
 export default function DashLayout({ children, role, admin }) {
+  const windowWidth = useWindowWidth();
+
   const router = useRouter();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   // const [screenWidth, setScreenWidth] = useState();
-  const { width, height } = useWindowSize();
+  // const { width, height } = useWindowSize();
 
   // useEffect(() => {
   //   const handleResize = () => {
@@ -65,7 +69,7 @@ export default function DashLayout({ children, role, admin }) {
   // }, []);
 
   const openedMixin = (theme) => ({
-    width: width > 1100 ? "15vw" : "20vw",
+    width: windowWidth > 1100 ? "15vw" : "20vw",
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -103,8 +107,8 @@ export default function DashLayout({ children, role, admin }) {
       duration: theme.transitions.duration.leavingScreen,
     }),
     ...(open && {
-      marginLeft: width > 1100 ? "15vw" : "20vw",
-      width: `calc(100% - ${width > 1100 ? "15vw" : "20vw"})`,
+      marginLeft: windowWidth > 1100 ? "15vw" : "20vw",
+      width: `calc(100% - ${windowWidth > 1100 ? "15vw" : "20vw"})`,
       transition: theme.transitions.create(["width", "margin"], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.enteringScreen,
@@ -115,7 +119,7 @@ export default function DashLayout({ children, role, admin }) {
   const Drawer = styled(MuiDrawer, {
     shouldForwardProp: (prop) => prop !== "open",
   })(({ theme, open }) => ({
-    width: width > 1100 ? "15vw" : "20vh",
+    width: windowWidth > 1100 ? "15vw" : "20vh",
     flexShrink: 0,
     whiteSpace: "nowrap",
     boxSizing: "border-box",
