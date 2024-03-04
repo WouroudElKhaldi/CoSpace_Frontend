@@ -12,7 +12,14 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { IconButton } from "@mui/material";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import useWindowSize from "@/hooks/window";
+import dynamic from "next/dynamic";
+
+const useWindowSize = dynamic(
+  () => {
+    return import("../../hooks/window");
+  },
+  { ssr: false }
+);
 
 export default function Navbar() {
   const router = useRouter();

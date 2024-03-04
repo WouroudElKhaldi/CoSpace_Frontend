@@ -10,33 +10,33 @@ export default function useWindowSize() {
   });
 
   useEffect(() => {
-    function handleResize() {
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-        scrollY: window.scrollY, // Update scroll position
-      });
-    }
-
-    function handleScroll() {
-      setWindowSize((prev) => ({
-        ...prev,
-        scrollY: window.scrollY, // Update scroll position
-      }));
-    }
-
-    window.addEventListener("resize", handleResize);
-    window.addEventListener("scroll", handleScroll); // Add scroll event listener
-
     if (typeof window !== "undefined") {
-      handleResize(); // Call handleResize initially
-      handleScroll(); // Call handleScroll initially
-    }
+      function handleResize() {
+        setWindowSize({
+          width: window.innerWidth,
+          height: window.innerHeight,
+          scrollY: window.scrollY,
+        });
+      }
 
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      window.removeEventListener("scroll", handleScroll); // Remove scroll event listener on cleanup
-    };
+      function handleScroll() {
+        setWindowSize((prev) => ({
+          ...prev,
+          scrollY: window.scrollY,
+        }));
+      }
+
+      window.addEventListener("resize", handleResize);
+      window.addEventListener("scroll", handleScroll);
+
+      handleResize();
+      handleScroll();
+
+      return () => {
+        window.removeEventListener("resize", handleResize);
+        window.removeEventListener("scroll", handleScroll);
+      };
+    }
   }, []);
 
   return windowSize;

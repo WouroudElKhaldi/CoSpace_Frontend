@@ -9,8 +9,15 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { AuthContext } from "@/context/authContext";
 import Image from "next/image";
-import useWindowSize from "@/hooks/window";
+// import useWindowSize from "@/hooks/window";
+import dynamic from "next/dynamic";
 
+const useWindowSize = dynamic(
+  () => {
+    return import("../../hooks/window");
+  },
+  { ssr: false }
+);
 const Table = ({
   data,
   isEdit,

@@ -35,7 +35,14 @@ import RuleIcon from "@mui/icons-material/Rule";
 import Link from "next/link";
 import Loading from "@/components/loading/loading";
 import Image from "next/image";
-import useWindowSize from "@/hooks/window";
+import dynamic from "next/dynamic";
+
+const useWindowSize = dynamic(
+  () => {
+    return import("../../hooks/window");
+  },
+  { ssr: false }
+);
 
 export default function DashLayout({ children, role, admin }) {
   const router = useRouter();
